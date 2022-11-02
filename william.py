@@ -75,7 +75,7 @@ def opcion03():
 
 def opcion04():
     print("\nEliminando un libro...\n")
-    with open("libros2.csv", "r", encoding='utf-8') as f:
+    with open("books.csv", "r", encoding='utf-8') as f:
         file = csv.DictReader(f)
         books = []
         for row in file:
@@ -93,7 +93,7 @@ def opcion04():
 
     books.pop(indice)
 
-    with open("libros2.csv", "w", encoding="utf-8", newline="\n") as f_write:
+    with open("books.csv", "w", encoding="utf-8", newline="\n") as f_write:
         campos = ["id","title","genre","ISBN","editorial","authors"]
         registro = csv.DictWriter(f_write,fieldnames=campos)
         registro.writeheader()

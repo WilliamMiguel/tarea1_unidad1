@@ -1,6 +1,6 @@
 import os
 import csv
-import libro from Libro
+from libro import *
 
 os.system("cls")
 

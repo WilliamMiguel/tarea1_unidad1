@@ -5,7 +5,7 @@ os.system("cls")
 from libro import *
 
 def cargaLibros():
-    with open("libros.csv", "r", encoding='utf-8') as f:
+    with open("books.csv", "r", encoding='utf-8') as f:
         archivo = csv.DictReader(f)
         libros = []
         for row in archivo:
@@ -32,7 +32,7 @@ def listarLibros(libros):
 def opcion01():
     librosCargar = int(
         input("\n¿Cuántos libros desea cargar? Ingrese un número: "))
-    with open("libros.csv", "r", encoding='utf-8') as f:
+    with open("books.csv", "r", encoding='utf-8') as f:
         archivo = csv.DictReader(f)
         libros = []
         libronumero = 0
@@ -66,7 +66,7 @@ def opcion03():
     libro = Libro(_id, title, genre, ISBN, editorial, authors)
     libro.registro()
     # libros.append(libro.get_book())
-    with open("libros.csv", "a", encoding="utf-8", newline="\n") as f_write:
+    with open("books.csv", "a", encoding="utf-8", newline="\n") as f_write:
         campos = ["id","title","genre","ISBN","editorial","authors"]
         registro = csv.DictWriter(f_write,fieldnames=campos)
         registro.writerow(libro.get_book())

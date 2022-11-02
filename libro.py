@@ -48,7 +48,7 @@ class Libro:
         self.__book["id"] = self.__id
         self.__book["title"] = self.__title
         self.__book["genre"] = self.__genre
-        self.__book["ISBN"] = self.__ISBN
+        self.__book["ISBN"] = self.__isbn
         self.__book["editorial"] = self.__editorial
         self.__book["authors"] = self.__authors
 
@@ -58,7 +58,7 @@ class Libro:
     def mostrarLibro(self):
         print(f"Título: {self.__title}")
         print(f"Género: {self.__genre}")
-        print(f"ISBN: {self.__ISBN}")
+        print(f"ISBN: {self.__isbn}")
         print(f"Editorial: {self.__editorial}")
         print("Autor(es):")
         print(*self.__authors, sep=", ")

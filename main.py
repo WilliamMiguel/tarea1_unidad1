@@ -111,7 +111,7 @@ def option04(books):
     return newListBooks 
 
 #-------------------------------------------- Opción 05 Y Opción 07 --------------------------------------------
-def option05or07(optionType: int):
+def option05or07(optionType: int, books):
     print("Elije la opción de búsqueda Ejemp(1):")
 
     isOption05:int = optionType == 1
@@ -136,7 +136,7 @@ def option05or07(optionType: int):
             continue
         break
     
-    listBook = loadBooks()
+    listBook = books
 
     text = ""
     while (True): 
@@ -173,12 +173,12 @@ def option05or07(optionType: int):
     print()
 
 #-------------------------------------------- Opción 06 --------------------------------------------
-def option06():
-    listBookOrdered = list(sorted(loadBooks(), key = lambda book : book["title"]))
+def option06(books):
+    listBookOrdered = list(sorted(books, key = lambda book : book["title"]))
     tableBooks(listBookOrdered)
 
 #-------------------------------------------- Opción 08 --------------------------------------------
-def option08():
+def option08(books):
     numberAuthors: str = ""
     while (True) :
         if (not(numberAuthors.isnumeric())) :
@@ -192,7 +192,7 @@ def option08():
         listAuthors:list = book["authors"].split(";")
         return len(listAuthors) == numberAuthors
 
-    listBookByNumbersAuthors = list(filter(filterByNumbersAuthors, loadBooks()))
+    listBookByNumbersAuthors = list(filter(filterByNumbersAuthors, books))
     
     print()
     tableBooks(listBookByNumbersAuthors)
@@ -273,13 +273,13 @@ while True:
     if option == 4:
         books = option04(books)
     if option == 5:
-        option05or07(1)
+        option05or07(1, books)
     if option == 6:
-        option06()
+        option06(books)
     if option == 7:
-        option05or07(2)
+        option05or07(2, books)
     if option == 8:
-        option08()
+        option08(books)
     if option == 9:
         books = option09(books)
     if option == 10:

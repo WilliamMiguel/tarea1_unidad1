@@ -3,7 +3,8 @@ from libro import *
 import os
 import csv
 
-os.system("pip install tabulate")
+#os.system("pip install tabulate")
+
 from tabulate import tabulate
 
 #-------------------------------------------- Cargar Libros --------------------------------------------
@@ -96,7 +97,131 @@ def option03():
 
 #-------------------------------------------- Opción 04 --------------------------------------------
 def option04(books):
-    pass
+    print("\nEliminando libro\n")
+
+    id = input("Ingrese el id del libro a eliminar: ")
+
+    def filterListBooks(book: dict):
+        if book["id"] != id: return book
+    
+    newListBooks =  list(filter(filterListBooks , books))
+
+    print(f"\nSe eliminó el libro con el id: {id}")
+
+    return newListBooks 
+
+#-------------------------------------------- Opción 05 Y Opción 07 --------------------------------------------
+def option05or07(optionType: int):
+    print("Elije la opción de búsqueda Ejemp(1):")
+
+    isOption05:int = optionType == 1
+    listOptions: list = []
+
+    if (isOption05):
+        print('''    Opcion 1: Buscar libro por ISBN.
+    Opción 2: Buscar libro por título.
+        ''')
+        listOptions = ["1", "2"]
+    else: 
+        print('''    Opcion 1: Buscar libro por autor.
+    Opción 2: Buscar libro por editorial.
+    Opción 3: Buscar libro por género.
+        ''')
+        listOptions = ["1", "2", "3"]
+
+    search = ""
+    while (True):
+        if (search not in listOptions):
+            search = input("Ingrese la opción de búsqueda: ")
+            continue
+        break
+    
+    listBook = loadBooks()
+
+    text = ""
+    while (True): 
+        if (text == "" or text.isspace()):
+            if (search == "1"): 
+                if(isOption05) :
+                    text = input("Ingrese el ISBN a buscar: ")
+                else:
+                    text = input("Ingrese el autor a buscar: ")
+                continue
+            if (search == "2"):
+                if (isOption05) : 
+                    text = input("Ingrese el título a buscar: ")
+                else : 
+                    text = input("Ingrese el editorial a buscar: ")
+                continue
+            if (search == "3"):
+                text = input("Ingrese el género a buscar: ")
+                continue
+        break
+    
+    searchFilter = ""
+    if (search == "1") : 
+        if (isOption05) : searchFilter = "ISBN"
+        else : searchFilter = "authors"
+    if (search == "2") : 
+        if (isOption05) : searchFilter = "title"
+        else : searchFilter = "editorial"
+    if (search == "3"): searchFilter = "genre"
+
+    listBookFilter = list(filter((lambda book: text in book[searchFilter]), listBook))
+
+    tableBooks(listBookFilter)
+    print()
+
+#-------------------------------------------- Opción 06 --------------------------------------------
+def option06():
+    listBookOrdered = list(sorted(loadBooks(), key = lambda book : book["title"]))
+    tableBooks(listBookOrdered)
+
+#-------------------------------------------- Opción 08 --------------------------------------------
+def option08():
+    numberAuthors: str = ""
+    while (True) :
+        if (not(numberAuthors.isnumeric())) :
+            numberAuthors = input("Ingrese el número de autores: ")
+            continue
+        
+        numberAuthors: int = int(numberAuthors)
+        break
+    
+    def filterByNumbersAuthors(book: dict):
+        listAuthors:list = book["authors"].split(";")
+        return len(listAuthors) == numberAuthors
+
+    listBookByNumbersAuthors = list(filter(filterByNumbersAuthors, loadBooks()))
+    
+    print()
+    tableBooks(listBookByNumbersAuthors)
+
+#-------------------------------------------- Opción 09 --------------------------------------------
+def option09(books):
+    print("\nActualizando libro\n")
+
+    id = input("Ingrese el id del libro a modificar: ")
+    title = input("Ingrese el título: ")
+    genre = input("Ingrese el género: ")
+    ISBN = input("Ingrese el ISBN: ")
+    editorial = input("Ingrese la editorial: ")
+    authors = input("Ingrese el autor o los autores (separados mediante ;): ")
+
+    def mapListBooks(book: dict):
+        if book["id"] == id:
+            book["title"] = title
+            book["genre"] = genre
+            book["ISBN"] = ISBN
+            book["editorial"] = editorial
+            book["authors"] = authors
+        return book
+    
+    newListBooks =  tuple(map(mapListBooks , books))
+
+    print(f"\nSe actualizó el libro con el id: {id}")
+
+    return newListBooks 
 
 #-------------------------------------------- Opción 10 --------------------------------------------
 def option10(books):
@@ -147,6 +272,16 @@ while True:
         books = option03()
     if option == 4:
         books = option04(books)
+    if option == 5:
+        option05or07(1)
+    if option == 6:
+        option06()
+    if option == 7:
+        option05or07(2)
+    if option == 8:
+        option08()
+    if option == 9:
+        books = option09(books)
     if option == 10:
         option10(books)
 

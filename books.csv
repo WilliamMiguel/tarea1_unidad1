@@ -1,6 +1,16 @@
 id,title,genre,ISBN,editorial,authors
+01,La Historia,Teología,875-9-6-845,Vida,Max Lucado
 02,Preparación para pascua,Teología,475-9-2-845,Harper Collins,C.S. Lewis
 03,El príncipe Caspian,Fantasía,258-6-9-872,Cometa,C.S. Lewis
-04,¿Quién creó a Dios?,Apologética,978-0-5-989,Vida,Ravi Zacharias;Norman Geisler
-05,Estructuras de datos y algoritmos,Ingeniería,978-9-6-860,Addison-Wesley,Alfred V. Aho;John E. Hopcroft;Jeffrey D. Ullman
-06,El principito,Ficción,Antoine de Saint-Exupery,Salamandra,Anotine de Saint-Exupery
+04,¿Quién creó a Dios?,Apologética,978-0-5-989,Vida,Ravi Zacharias; Norman Geisler
+05,Estructuras de datos y algoritmos,Ingeniería,978-9-6-860,Addison-Wesley,Alfred V. Aho; John E. Hopcroft; Jeffrey D. Ullman
+06,El principito,Ficción,842-3-5-917,Salamandra,Anotine de Saint-Exupery
+07,El día que se perdió la cordura,Ficción,857-9-3-210,SUMA,Javier Castillo
+08,Learn Python in One Day and Learn It Well,Computación,203-3-0-745,CreateSpace,Jamie Chan; LCF Publishing
+09,Introduction to Machine Learning with Python: A Guide for Data Scientists,Computación,521-6-3-745,O’Reilly Media,Andreas C. Müller; Sarah Guido
+10,Inteligencia de Negocios con Excel y Power BI,Computación,524-3-8-924,Bisoluciones.com,Didier Atehortua Morales; Fabian Torres Hernandez; Miguel Caballero Sierra
+11,Seis de cuervos,Crimen y misterio,851-0-3-526,ePubLibre,Leigh Bardugo
+12,Imperios - Una nueva visión de la Historia Universal,Historia,847-2-1-369,Crítica,Jane Burbank; Frederick Cooper
+13,La vida secreta de la mente,Medicina,023-2-8-723,Debate,Mariano Sigman
+14,El milagro metabólico,Medicina,045-9-8-745,Planeta,Carlos Alberto Jaramillo Trujillo
+15,Electricidad y electronica,Electrónica,854-6-2-521,Oxford University Press,Julio Olmo Escribano

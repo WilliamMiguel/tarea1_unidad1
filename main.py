@@ -1,8 +1,7 @@
+from libro import *
+from tabulate import tabulate
 import os
 import csv
-os.system("cls")
-
-from libro import *
 
 def loadBooks():
     with open("books.csv", "r", encoding='utf-8') as f:
@@ -12,21 +11,34 @@ def loadBooks():
             books.append(row)
     return books
 
-def listBooks(books):
-    listofBooks = []
-    for attribute in books:
-        _id = attribute["id"]
-        title = attribute["title"]
-        genre = attribute["genre"]
-        isbn = attribute["ISBN"]
-        editorial = attribute["editorial"]
-        authors = attribute["authors"].split(";")
-        book = Libro(_id, title, genre, isbn, editorial, authors)
-        listofBooks.append(book)
+# def listBooks(books):
+#     listofBooks = []
+#     for attribute in books:
+#         _id = attribute["id"]
+#         title = attribute["title"]
+#         genre = attribute["genre"]
+#         isbn = attribute["ISBN"]
+#         editorial = attribute["editorial"]
+#         authors = attribute["authors"].split(";")
+#         book = Libro(_id, title, genre, isbn, editorial, authors)
+#         listofBooks.append(book)
 
-    for book in listofBooks:
-        book.showBook()
-        print()
+#     for book in listofBooks:
+#         book.showBook()
+#         print()
+
+def tableBooks(books):
+    ids = [book["id"] for book in books]
+    titles = [book["title"] for book in books]
+    genre = [book["genre"] for book in books]
+    isbn = [book["ISBN"] for book in books]
+    editorial = [book["editorial"] for book in books]
+    authors = [book["authors"] for book in books]
+
+    tupleBooks = zip(ids, titles, genre, isbn, editorial, authors)
+    fieldnames = ["ID", "Título", "Género", "ISBN", "Editorial", "Autor(es)"]
+    print(tabulate(tupleBooks, headers=fieldnames))
+    print()
 
 def isEmpty(texto):
     while True:
@@ -51,15 +63,20 @@ def option01():
                 break
             books.append(row)
             bookNumber += 1
+        
     print("\nCARGANDO LIBROS...\n")
-    listBooks(books)
-    print("Carga completa")
+    tableBooks(books)
+    if bookNumber < int(upBooks):
+        print(f"ENCONTRAMOS {bookNumber} LIBROS")
+    else:
+        print("CARGA COMPLETA")
 
 def option02():
     print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
     books = loadBooks()
-    listBooks(books)
+    tableBooks(books)
     print("Carga completa")
+
 
 def option03():
     print("\nAGREGANDO UN LIBRO...\n")
@@ -68,17 +85,19 @@ def option03():
     genre = isEmpty("Ingrese el género: ")
     ISBN = isEmpty("Ingrese el ISBN: ")
     editorial = isEmpty("Ingrese la editorial: ")
-    authors = isEmpty("Ingrese el autor o los autores (separados mediante ;): ")
+    authors = isEmpty(
+        "Ingrese el autor o los autores (separados mediante ;): ")
     book = Libro(_id, title, genre, ISBN, editorial, authors)
     book.registro()
     with open("books.csv", "a", encoding="utf-8", newline="\n") as f_write:
-        fieldnames = ["id","title","genre","ISBN","editorial","authors"]
-        register = csv.DictWriter(f_write, fieldnames = fieldnames)
+        fieldnames = ["id", "title", "genre", "ISBN", "editorial", "authors"]
+        register = csv.DictWriter(f_write, fieldnames=fieldnames)
         register.writerow(book.get_book())
     print("\nSe agregó un libro")
 
+
 def option04():
-    print("\nEliminando un libro...\n")
+    print("\nELIMINANDO UN LIBRO...\n")
     with open("books.csv", "r", encoding='utf-8') as f:
         file = csv.DictReader(f)
         books = []
@@ -98,14 +117,17 @@ def option04():
     books.pop(index)
 
     with open("books.csv", "w", encoding="utf-8", newline="\n") as f_write:
-        fieldnames = ["id","title","genre","ISBN","editorial","authors"]
-        register = csv.DictWriter(f_write, fieldnames = fieldnames)
+        fieldnames = ["id", "title", "genre", "ISBN", "editorial", "authors"]
+        register = csv.DictWriter(f_write, fieldnames=fieldnames)
         register.writeheader()
         register.writerows(books[:])
 
     print("\nSe eliminó el libro")
 
-options = ["option01()", "option02()", "option03()","option04()","option05()","option06()","option07()","option08()","option09()","option10()"]
+
+options = ["option01()", "option02()", "option03()", "option04()", "option05()",
+           "option06()", "option07()", "option08()", "option09()", "option10()"]
+
 
 def showOptions():
     print("Elije una de las siguientes opciones:")
@@ -121,12 +143,14 @@ def showOptions():
     Opción 10: Guardar libros en archivo de disco duro (.txt o csv).
     ''')
 
+
 optionsNumber = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
-print("\t\tBIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
+
 
 while True:
-    # os.system("cls")
+    os.system("cls")
+    print("\t\tBIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
     showOptions()
     while True:
         option = input("Ingrese el número de una opción: ")

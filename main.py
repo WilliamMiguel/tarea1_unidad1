@@ -34,6 +34,7 @@ def tableBooks(books):
     isbn = [book["ISBN"] for book in books]
     editorial = [book["editorial"] for book in books]
     authors = [book["authors"] for book in books]
+
     tupleBooks = zip(ids, titles, genre, isbn, editorial, authors)
     fieldnames = ["ID", "Título", "Género", "ISBN", "Editorial", "Autor(es)"]
     print(tabulate(tupleBooks, headers=fieldnames))
@@ -62,10 +63,13 @@ def option01():
                 break
             books.append(row)
             bookNumber += 1
+        
     print("\nCARGANDO LIBROS...\n")
     tableBooks(books)
-    print("Carga completa")
-
+    if bookNumber < int(upBooks):
+        print(f"ENCONTRAMOS {bookNumber} LIBROS")
+    else:
+        print("CARGA COMPLETA")
 
 def option02():
     print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")

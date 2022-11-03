@@ -28,35 +28,47 @@ def listBooks(books):
         book.showBook()
         print()
 
+def isEmpty(texto):
+    while True:
+        attribute = input(texto).strip()
+        if len(attribute) != 0:
+            break
+    return attribute
+
 def option01():
-    upBooks = int(input("\n¿Cuántos libros desea cargar? Ingrese un número: "))
+    print()
+    while True:
+        upBooks = input("¿Cuántos libros desea cargar? Ingrese un número: ")
+        if upBooks.isnumeric():
+            break
+
     with open("books.csv", "r", encoding='utf-8') as f:
         file = csv.DictReader(f)
         books = []
         bookNumber = 0
         for row in file:
-            if bookNumber == upBooks:
+            if bookNumber == int(upBooks):
                 break
             books.append(row)
             bookNumber += 1
-    print()
+    print("\nCARGANDO LIBROS...\n")
     listBooks(books)
     print("Carga completa")
 
 def option02():
-    print("\nContamos con los siguientes libros...\n")
+    print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
     books = loadBooks()
     listBooks(books)
     print("Carga completa")
 
 def option03():
-    print("\nAgregando un nuevo libro...\n")
-    _id = input("Ingrese el id: ")
-    title = input("Ingrese el título: ")
-    genre = input("Ingrese el género: ")
-    ISBN = input("Ingrese el ISBN: ")
-    editorial = input("Ingrese la editorial: ")
-    authors = input("Ingrese el autor o los autores (separados mediante ;): ")
+    print("\nAGREGANDO UN LIBRO...\n")
+    _id = isEmpty("Ingrese el ID: ")
+    title = isEmpty("Ingrese el título: ")
+    genre = isEmpty("Ingrese el género: ")
+    ISBN = isEmpty("Ingrese el ISBN: ")
+    editorial = isEmpty("Ingrese la editorial: ")
+    authors = isEmpty("Ingrese el autor o los autores (separados mediante ;): ")
     book = Libro(_id, title, genre, ISBN, editorial, authors)
     book.registro()
     with open("books.csv", "a", encoding="utf-8", newline="\n") as f_write:
@@ -96,7 +108,7 @@ def option04():
 options = ["option01()", "option02()", "option03()","option04()","option05()","option06()","option07()","option08()","option09()","option10()"]
 
 def showOptions():
-    print("Elija una de las siguientes opciones:")
+    print("Elije una de las siguientes opciones:")
     print('''    Opción 1: Leer archivo de disco duro (.txt o csv).
     Opción 2: Listar libros.
     Opción 3: Agregar libro.
@@ -109,12 +121,24 @@ def showOptions():
     Opción 10: Guardar libros en archivo de disco duro (.txt o csv).
     ''')
 
+optionsNumber = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
+print("\t\tBIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
+
 while True:
+    # os.system("cls")
     showOptions()
-    option = int(input("Ingrese el número de la opción: "))
-    eval(options[option-1])
+    while True:
+        option = input("Ingrese el número de una opción: ")
+        if option in optionsNumber:
+            break
+    eval(options[int(option)-1])
     print("----------------------------------------------")
-    proceed = input("¿Desea elegir otra opción? S/N: ").upper()
+    while True:
+        proceed = input("¿Desea elegir otra opción? S/N: ").upper()
+        if proceed == "S" or proceed == "N":
+            break
+
     if proceed == "S":
         print()
         continue

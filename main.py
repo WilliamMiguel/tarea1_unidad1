@@ -1,8 +1,9 @@
 from libro import *
-from tabulate import tabulate
+
 import os
 import csv
 os.system("pip install tabulate")
+from tabulate import tabulate
 
 
 def loadBooks():

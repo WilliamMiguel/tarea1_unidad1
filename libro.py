@@ -44,7 +44,7 @@ class Libro:
     def get_autor(self) -> str:
         return self.__authors
 
-    def registro(self):
+    def registro(self) -> None:
         self.__book["id"] = self.__id
         self.__book["title"] = self.__title
         self.__book["genre"] = self.__genre
@@ -52,13 +52,5 @@ class Libro:
         self.__book["editorial"] = self.__editorial
         self.__book["authors"] = self.__authors
 
-    def get_book(self):
+    def get_book(self) -> dict:
         return self.__book
-
-    # def showBook(self):
-    #     print(f"Título: {self.__title}")
-    #     print(f"Género: {self.__genre}")
-    #     print(f"ISBN: {self.__isbn}")
-    #     print(f"Editorial: {self.__editorial}")
-    #     print("Autor(es):")
-    #     print(*self.__authors, sep=", ")

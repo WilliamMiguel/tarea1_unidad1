@@ -4,76 +4,68 @@ os.system("cls")
 
 from libro import *
 
-def cargaLibros():
+def loadBooks():
     with open("books.csv", "r", encoding='utf-8') as f:
-        archivo = csv.DictReader(f)
-        libros = []
-        for row in archivo:
-            libros.append(row)
-    return libros
+        file = csv.DictReader(f)
+        books = []
+        for row in file:
+            books.append(row)
+    return books
 
+def listBooks(books):
+    listofBooks = []
+    for attribute in books:
+        _id = attribute["id"]
+        title = attribute["title"]
+        genre = attribute["genre"]
+        isbn = attribute["ISBN"]
+        editorial = attribute["editorial"]
+        authors = attribute["authors"].split(";")
+        book = Libro(_id, title, genre, isbn, editorial, authors)
+        listofBooks.append(book)
 
-def listarLibros(libros):
-    listaLibros = []
-    for atributo in libros:
-        _id = atributo["id"]
-        title = atributo["title"]
-        genre = atributo["genre"]
-        ISBN = atributo["ISBN"]
-        editorial = atributo["editorial"]
-        authors = atributo["authors"].split(";")
-        libro = Libro(_id, title, genre, ISBN, editorial, authors)
-        listaLibros.append(libro)
-
-    for libro in listaLibros:
-        libro.mostrarLibro()
+    for book in listofBooks:
+        book.showBook()
         print()
 
-def opcion01():
-    librosCargar = int(
-        input("\n¿Cuántos libros desea cargar? Ingrese un número: "))
+def option01():
+    upBooks = int(input("\n¿Cuántos libros desea cargar? Ingrese un número: "))
     with open("books.csv", "r", encoding='utf-8') as f:
-        archivo = csv.DictReader(f)
-        libros = []
-        libronumero = 0
-        for row in archivo:
-            if libronumero == librosCargar:
+        file = csv.DictReader(f)
+        books = []
+        bookNumber = 0
+        for row in file:
+            if bookNumber == upBooks:
                 break
-            libros.append(row)
-            libronumero += 1
+            books.append(row)
+            bookNumber += 1
     print()
-    listarLibros(libros)
+    listBooks(books)
     print("Carga completa")
-    # return libros
 
-
-def opcion02():
+def option02():
     print("\nContamos con los siguientes libros...\n")
-    libros = cargaLibros()
-    listarLibros(libros)
+    books = loadBooks()
+    listBooks(books)
     print("Carga completa")
-    # return libros
 
-def opcion03():
+def option03():
     print("\nAgregando un nuevo libro...\n")
-    libros = cargaLibros()
     _id = input("Ingrese el id: ")
     title = input("Ingrese el título: ")
     genre = input("Ingrese el género: ")
     ISBN = input("Ingrese el ISBN: ")
     editorial = input("Ingrese la editorial: ")
     authors = input("Ingrese el autor o los autores (separados mediante ;): ")
-    libro = Libro(_id, title, genre, ISBN, editorial, authors)
-    libro.registro()
-    # libros.append(libro.get_book())
+    book = Libro(_id, title, genre, ISBN, editorial, authors)
+    book.registro()
     with open("books.csv", "a", encoding="utf-8", newline="\n") as f_write:
-        campos = ["id","title","genre","ISBN","editorial","authors"]
-        registro = csv.DictWriter(f_write,fieldnames=campos)
-        registro.writerow(libro.get_book())
+        fieldnames = ["id","title","genre","ISBN","editorial","authors"]
+        register = csv.DictWriter(f_write, fieldnames = fieldnames)
+        register.writerow(book.get_book())
     print("\nSe agregó un libro")
-    # return libros
 
-def opcion04():
+def option04():
     print("\nEliminando un libro...\n")
     with open("books.csv", "r", encoding='utf-8') as f:
         file = csv.DictReader(f)
@@ -81,29 +73,29 @@ def opcion04():
         for row in file:
             books.append(row)
 
-    idDisponible = [book["id"] for book in books]
+    idAvailable = [book["id"] for book in books]
 
     while True:
         delete = input("Ingrese el ID del libro a borrar: ")
-        if delete in idDisponible:
-            indice = idDisponible.index(delete)
+        if delete in idAvailable:
+            index = idAvailable.index(delete)
             break
         else:
             print("Ingrese un ID válido")
 
-    books.pop(indice)
+    books.pop(index)
 
     with open("books.csv", "w", encoding="utf-8", newline="\n") as f_write:
-        campos = ["id","title","genre","ISBN","editorial","authors"]
-        registro = csv.DictWriter(f_write,fieldnames=campos)
-        registro.writeheader()
-        registro.writerows(books[:])
+        fieldnames = ["id","title","genre","ISBN","editorial","authors"]
+        register = csv.DictWriter(f_write, fieldnames = fieldnames)
+        register.writeheader()
+        register.writerows(books[:])
 
     print("\nSe eliminó el libro")
 
-opciones = ["opcion01()", "opcion02()", "opcion03()","opcion04()","opcion05()","opcion06()","opcion07()","opcion08()","opcion09()","opcion10()"]
+options = ["option01()", "option02()", "option03()","option04()","option05()","option06()","option07()","option08()","option09()","option10()"]
 
-def mostrarOpciones():
+def showOptions():
     print("Elija una de las siguientes opciones:")
     print('''    Opción 1: Leer archivo de disco duro (.txt o csv).
     Opción 2: Listar libros.
@@ -118,12 +110,12 @@ def mostrarOpciones():
     ''')
 
 while True:
-    mostrarOpciones()
-    opcion = int(input("Ingrese el número de la opción: "))
-    eval(opciones[opcion-1])
+    showOptions()
+    option = int(input("Ingrese el número de la opción: "))
+    eval(options[option-1])
     print("----------------------------------------------")
-    continuar = input("¿Desea elegir otra opción? S/N: ").upper()
-    if continuar == "S":
+    proceed = input("¿Desea elegir otra opción? S/N: ").upper()
+    if proceed == "S":
         print()
         continue
     else:

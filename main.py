@@ -1,9 +1,11 @@
 from libro import *
-
 import os
 import csv
 os.system("pip install tabulate")
 from tabulate import tabulate
+os.system("pip install colorama")
+from colorama import init,Back,Fore,Style
+init(autoreset=True)
 
 
 def loadBooks():
@@ -55,21 +57,21 @@ def option01():
 
     print("\nCARGANDO LIBROS...\n")
     if bookNumber < int(upBooks):
-        print(f"ENCONTRAMOS {bookNumber} LIBROS")
+        print(Back.GREEN+f"ENCONTRAMOS {bookNumber} LIBROS")
     else:
-        print("CARGA COMPLETA")
+        print(Fore.GREEN+"CARGA COMPLETA")
     return books
 
 
 def option02(books):
     print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
     tableBooks(books)
-    print("Carga completa")
+    print(Fore.GREEN+"Carga completa")
 
 
 def option03():
     books = loadBooks()
-    print("\nAGREGANDO UN LIBRO...\n")
+    print(Fore.CYAN+"\nAGREGANDO UN LIBRO...\n")
     _id = isEmpty("Ingrese el ID: ")
     title = isEmpty("Ingrese el título: ")
     genre = isEmpty("Ingrese el género: ")
@@ -85,12 +87,12 @@ def option03():
     #     fieldnames = ["id", "title", "genre", "ISBN", "editorial", "authors"]
     #     register = csv.DictWriter(f_write, fieldnames=fieldnames)
     #     register.writerow(book.get_book())
-    print("\nSe agregó un libro")
+    print(Fore.GREEN+"\nSe agregó un libro")
     return books
 
 
 def option04(books):
-    print("\nELIMINANDO UN LIBRO...\n")
+    print(Fore.RED+"\nELIMINANDO UN LIBRO...\n")
     # with open("books.csv", "r", encoding='utf-8') as f:
     #     file = csv.DictReader(f)
     #     books = []
@@ -106,7 +108,7 @@ def option04(books):
             index = idAvailable.index(delete)
             break
         else:
-            print("Ingrese un ID válido")
+            print(Back.RED+"Ingrese un ID válido")
 
     # deleteBook = books.pop(index)
     # print(deleteBook)
@@ -117,7 +119,7 @@ def option04(books):
     #     register.writeheader()
     #     register.writerows(books[:])
 
-    print("\nSe eliminó el libro")
+    print(Fore.RED+"\nSe eliminó el libro")
     return index
 
 # books = option01()
@@ -132,7 +134,7 @@ def option10(books):
         register = csv.DictWriter(f_write, fieldnames=fieldnames)
         register.writeheader()
         register.writerows(books[:])
-    print("\nCAMBIOS GUARDADOS")
+    print(Fore.GREEN+"\nCAMBIOS GUARDADOS")
 
 
 # options = ["option01()", "option02(books)", "option03()", "option04()", "option05()",
@@ -141,7 +143,7 @@ def option10(books):
 
 
 def showOptions():
-    print("Elije una de las siguientes opciones:")
+    print(Fore.BLUE +"Elije una de las siguientes opciones:")
     print('''    Opción 1: Leer archivo de disco duro (.txt o csv).
     Opción 2: Listar libros.
     Opción 3: Agregar libro.
@@ -161,10 +163,10 @@ optionsNumber = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 books = loadBooks()
 while True:
     os.system("cls")
-    print("\t\tBIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
+    print(Back.CYAN+"\t\tBIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
     showOptions()
     while True:
-        option = input("Ingrese el número de una opción: ")
+        option = input(Fore.BLUE+"Ingrese el número de una opción: ")
         if option in optionsNumber:
             option = int(option)
             break
@@ -182,7 +184,7 @@ while True:
     # eval(options[int(option)-1])
     print("----------------------------------------------")
     while True:
-        proceed = input("¿Desea elegir otra opción? S/N: ").upper()
+        proceed = input(Fore.MAGENTA+"¿Desea elegir otra opción? S/N: ").upper()
         if proceed == "S" or proceed == "N":
             break
 

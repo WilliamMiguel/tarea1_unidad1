@@ -55,7 +55,7 @@ class Libro:
     def get_book(self):
         return self.__book
 
-    def mostrarLibro(self):
+    def showBook(self):
         print(f"Título: {self.__title}")
         print(f"Género: {self.__genre}")
         print(f"ISBN: {self.__isbn}")

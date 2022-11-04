@@ -54,24 +54,22 @@ def isEmpty(texto: str) -> str:
     return attribute
 
 #-------------------------------------------- Opción 01 --------------------------------------------
-def option01() -> list[dict]:
+def option01(books:list[dict]) -> list[dict]:
     print()
     while True:
         upBooks: str = input("¿Cuántos libros desea cargar? Ingrese un número: ")
         if upBooks.isnumeric():
             break
 
-    with open("books.csv", "r", encoding='utf-8') as f:
-        file: csv.DictReader[str] = csv.DictReader(f)
-        books: list[dict] = []
-        bookNumber: int = 0
+    newBooks: list[dict] = []
+    bookNumber: int = 0
 
-        for row in file:
-            if bookNumber == int(upBooks):
-                break
+    for book in books:
+        if bookNumber == int(upBooks):
+            break
 
-            books.append(row)
-            bookNumber += 1
+        newBooks.append(book)
+        bookNumber += 1
 
     print("\nCARGANDO LIBROS...\n")
 
@@ -80,7 +78,7 @@ def option01() -> list[dict]:
     else:
         print("CARGA COMPLETA\n")
 
-    return books
+    return newBooks
 
 #-------------------------------------------- Opción 02 --------------------------------------------
 def option02(books: list[dict]) -> None:
@@ -89,9 +87,7 @@ def option02(books: list[dict]) -> None:
     print("Carga completa\n")
 
 #-------------------------------------------- Opción 03 --------------------------------------------
-def option03() -> list[dict]:
-    books:list[dict] = loadBooks()
-
+def option03(books: list[dict]) -> list[dict]:
     print("\nAGREGANDO UN LIBRO...\n")
     
     id: str = isEmpty("Ingrese el ID: ")
@@ -270,7 +266,11 @@ def showOptions():
 
 optionsNumber: list[str] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
-books: list[dict] = loadBooks()
+booksAll: list[dict] = loadBooks()
+booksSelected: list[dict] = []
+# Variable que decidirá si hubo una eliminación o un agregado
+ids:list[str] = []
+
 while True:
     os.system("cls")
     print("BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
@@ -285,24 +285,44 @@ while True:
 
     if option == 1:
         books = option01()
+        ids = [book["id"] for book in booksSelected]
     if option == 2:
-        option02(books)
+        option02(booksSelected)
     if option == 3:
-        books = option03()
+        booksSelected = option03(booksSelected)
     if option == 4:
-        books = option04(books)
+        booksSelected = option04(booksSelected)
     if option == 5:
-        option05or07(1, books)
+        option05or07(1, booksSelected)
     if option == 6:
-        option06(books)
+        option06(booksSelected)
     if option == 7:
-        option05or07(2, books)
+        option05or07(2, booksSelected)
     if option == 8:
-        option08(books)
+        option08(booksSelected)
     if option == 9:
-        books = option09(books)
+        books = option09(booksSelected)
     if option == 10:
-        option10(books)
+        newBooks: list[dict] = []
+            
+        # Recorriendo todos los libros
+        for book in booksAll:
+            # Recorriendo todos los libros seleccionados
+            for bookSe in booksSelected:
+                # En caso de que se haya actualizado se agregará el libro seleccionado en la nueva lista
+                if (book["id"] == bookSe["id"]):
+                    newBooks.append(bookSe)
+                    break 
+                # En caso de que se haya agregado un nuevo libro a la lista de seleccionado
+                if (bookSe["id"] not in ids):
+                    newBooks.append(bookSe)
+                    break
+                if (book["id"] not in ids): 
+                    newBooks.append(book)
+                    break
+
+        option10(newBooks)
+       
 
     print("----------------------------------------------")
 

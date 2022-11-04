@@ -2,56 +2,69 @@
 from libro import *
 import os
 import csv
+import time
 
 #os.system("pip install tabulate")
 
 from tabulate import tabulate
 
 #-------------------------------------------- Cargar Libros --------------------------------------------
-def loadBooks() -> list:
+def loadBooks() -> list[dict]:
     with open("books.csv", "r", encoding='utf-8') as f:
-        file = csv.DictReader(f)
-        books = []
+        file: csv.DictReader[str] = csv.DictReader(f)
+        books: list[dict] = []
 
         for row in file:
             books.append(row)
     return books
 
 #-------------------------------------------- Imprimir Libros En Tabla --------------------------------------------
-def tableBooks(books):
-    ids = [book["id"] for book in books]
-    titles = [book["title"] for book in books]
-    genre = [book["genre"] for book in books]
-    isbn = [book["ISBN"] for book in books]
-    editorial = [book["editorial"] for book in books]
-    authors = [book["authors"] for book in books]
-    tupleBooks = zip(ids, titles, genre, isbn, editorial, authors)
-    fieldnames = ["ID", "Título", "Género", "ISBN", "Editorial", "Autor(es)"]
+def tableBooks(books: list[dict]) -> None:
+    ids:list[str] = [book["id"] for book in books]
+    titles:list[str] = [book["title"] for book in books]
+    genre:list[str] = [book["genre"] for book in books]
+    isbn:list[str] = [book["isbn"] for book in books]
+    editorial:list[str] = [book["editorial"] for book in books]
+    authors:list[str] = [book["authors"] for book in books]
+    tupleBooks:zip[tuple] = zip(ids, titles, genre, isbn, editorial, authors)
+    fieldnames:list[str]= ["ID", "Título", "Género", "ISBN", "Editorial", "Autor(es)"]
 
     print(tabulate(tupleBooks, headers=fieldnames))
     print()
 
-#-------------------------------------------- Valida Si la Cadena está vacía --------------------------------------------
-def isEmpty(texto):
+#-------------------------------------------- Función Para Validar Id Ingresado --------------------------------------------
+def validateId(id: str, books: list[str], messageInvalidId: str) -> str:
+    ids:list[str] = [book["id"] for book in books]
+
     while True:
-        attribute = input(texto).strip()
+        if id not in ids:
+            id = input(messageInvalidId)
+            continue
+        break
+
+    return id
+
+#-------------------------------------------- Valida Si La Cadena Está Vacía --------------------------------------------
+def isEmpty(texto: str) -> str:
+    while True:
+        attribute:str = input(texto).strip()
 
         if len(attribute) != 0:
             break
     return attribute
 
 #-------------------------------------------- Opción 01 --------------------------------------------
-def option01():
+def option01() -> list[dict]:
     print()
     while True:
-        upBooks = input("¿Cuántos libros desea cargar? Ingrese un número: ")
+        upBooks: str = input("¿Cuántos libros desea cargar? Ingrese un número: ")
         if upBooks.isnumeric():
             break
 
     with open("books.csv", "r", encoding='utf-8') as f:
-        file = csv.DictReader(f)
-        books = []
-        bookNumber = 0
+        file: csv.DictReader[str] = csv.DictReader(f)
+        books: list[dict] = []
+        bookNumber: int = 0
 
         for row in file:
             if bookNumber == int(upBooks):
@@ -63,59 +76,61 @@ def option01():
     print("\nCARGANDO LIBROS...\n")
 
     if bookNumber < int(upBooks):
-        print(f"ENCONTRAMOS {bookNumber} LIBROS")
+        print(f"ENCONTRAMOS {bookNumber} LIBROS\n")
     else:
-        print("CARGA COMPLETA")
+        print("CARGA COMPLETA\n")
 
     return books
 
 #-------------------------------------------- Opción 02 --------------------------------------------
-def option02(books):
+def option02(books: list[dict]) -> None:
     print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
     tableBooks(books)
-    print("Carga completa")
+    print("Carga completa\n")
 
 #-------------------------------------------- Opción 03 --------------------------------------------
-def option03():
-    books = loadBooks()
+def option03() -> list[dict]:
+    books:list[dict] = loadBooks()
 
     print("\nAGREGANDO UN LIBRO...\n")
     
-    _id = isEmpty("Ingrese el ID: ")
-    title = isEmpty("Ingrese el título: ")
-    genre = isEmpty("Ingrese el género: ")
-    ISBN = isEmpty("Ingrese el ISBN: ")
-    editorial = isEmpty("Ingrese la editorial: ")
-    authors = isEmpty("Ingrese el autor o los autores (separados mediante ;): ")
+    id: str = isEmpty("Ingrese el ID: ")
+    title: str = isEmpty("Ingrese el título: ")
+    genre: str = isEmpty("Ingrese el género: ")
+    isbn: str = isEmpty("Ingrese el ISBN: ")
+    editorial: str = isEmpty("Ingrese la editorial: ")
+    authors: str = isEmpty("Ingrese el autor o los autores (separados mediante ;): ")
    
-    book = Libro(_id, title, genre, ISBN, editorial, authors)
+    book: Libro = Libro(id, title, genre, isbn, editorial, authors)
     book.registro()
     books.append(book.get_book())
 
-    print("\nSe agregó un libro")
+    print("\nSe agregó un libro\n")
     return books
 
 #-------------------------------------------- Opción 04 --------------------------------------------
-def option04(books):
+def option04(books: list[dict]) -> list[dict]:
     print("\nEliminando libro\n")
 
-    id = input("Ingrese el id del libro a eliminar: ")
+    id: str = input("Ingrese el id del libro a eliminar: ")
+   
+    id = validateId(id, books, "Id inválido. Ingresa nuevamente el id del libro a eliminar: ")
 
     def filterListBooks(book: dict):
         if book["id"] != id: return book
     
-    newListBooks =  list(filter(filterListBooks , books))
+    newListBooks: list[dict] =  list(filter(filterListBooks , books))
 
-    print(f"\nSe eliminó el libro con el id: {id}")
+    print(f"\nSe eliminó el libro con el id: {id}\n")
 
     return newListBooks 
 
 #-------------------------------------------- Opción 05 Y Opción 07 --------------------------------------------
-def option05or07(optionType: int, books):
-    print("Elije la opción de búsqueda Ejemp(1):")
+def option05or07(optionType: int, books: list[dict]) -> None:
+    print("\nElije la opción de búsqueda Ejemp(1):")
 
-    isOption05:int = optionType == 1
-    listOptions: list = []
+    isOption05: bool = optionType == 1
+    listOptions: list[str] = []
 
     if (isOption05):
         print('''    Opcion 1: Buscar libro por ISBN.
@@ -129,16 +144,16 @@ def option05or07(optionType: int, books):
         ''')
         listOptions = ["1", "2", "3"]
 
-    search = ""
+    search: str = ""
     while (True):
         if (search not in listOptions):
             search = input("Ingrese la opción de búsqueda: ")
             continue
         break
-    
-    listBook = books
 
-    text = ""
+    print()
+
+    text: str = ""
     while (True): 
         if (text == "" or text.isspace()):
             if (search == "1"): 
@@ -158,83 +173,87 @@ def option05or07(optionType: int, books):
                 continue
         break
     
-    searchFilter = ""
+    searchFilter: str = ""
     if (search == "1") : 
-        if (isOption05) : searchFilter = "ISBN"
+        if (isOption05) : searchFilter = "isbn"
         else : searchFilter = "authors"
     if (search == "2") : 
         if (isOption05) : searchFilter = "title"
         else : searchFilter = "editorial"
     if (search == "3"): searchFilter = "genre"
 
-    listBookFilter = list(filter((lambda book: text in book[searchFilter]), listBook))
+    listBookFilter: list[dict] = list(filter((lambda book: text in book[searchFilter]), books))
 
     tableBooks(listBookFilter)
     print()
 
 #-------------------------------------------- Opción 06 --------------------------------------------
-def option06(books):
-    listBookOrdered = list(sorted(books, key = lambda book : book["title"]))
+def option06(books: list[dict]) -> None:
+    print()
+    listBookOrdered: list[dict] = list(sorted(books, key = lambda book : book["title"]))
     tableBooks(listBookOrdered)
 
 #-------------------------------------------- Opción 08 --------------------------------------------
-def option08(books):
+def option08(books: list[dict]) -> None:
     numberAuthors: str = ""
     while (True) :
         if (not(numberAuthors.isnumeric())) :
-            numberAuthors = input("Ingrese el número de autores: ")
+            numberAuthors = input("\nIngrese el número de autores: ")
             continue
         
         numberAuthors: int = int(numberAuthors)
         break
     
-    def filterByNumbersAuthors(book: dict):
-        listAuthors:list = book["authors"].split(";")
+    def filterByNumbersAuthors(book: dict) -> bool:
+        listAuthors: list[str] = book["authors"].split(";")
         return len(listAuthors) == numberAuthors
 
-    listBookByNumbersAuthors = list(filter(filterByNumbersAuthors, books))
+    listBookByNumbersAuthors: list[dict] = list(filter(filterByNumbersAuthors, books))
     
     print()
     tableBooks(listBookByNumbersAuthors)
 
 #-------------------------------------------- Opción 09 --------------------------------------------
-def option09(books):
+def option09(books: list[dict]) -> list[dict]:
     print("\nActualizando libro\n")
 
-    id = input("Ingrese el id del libro a modificar: ")
-    title = input("Ingrese el título: ")
-    genre = input("Ingrese el género: ")
-    ISBN = input("Ingrese el ISBN: ")
-    editorial = input("Ingrese la editorial: ")
-    authors = input("Ingrese el autor o los autores (separados mediante ;): ")
+    id:str = input("Ingrese el id del libro a modificar: ")
 
-    def mapListBooks(book: dict):
+    id = validateId(id, books, "Id inválido. Ingresa nuevamente el id del libro a actualiazar: ")
+
+    title:str = input("\nIngrese el título: ")
+    genre:str = input("Ingrese el género: ")
+    isbn:str = input("Ingrese el ISBN: ")
+    editorial:str = input("Ingrese la editorial: ")
+    authors:str = input("Ingrese el autor o los autores (separados mediante ;): ")
+
+    def mapListBooks(book: dict) -> dict:
         if book["id"] == id:
             book["title"] = title
             book["genre"] = genre
-            book["ISBN"] = ISBN
+            book["isbn"] = isbn
             book["editorial"] = editorial
             book["authors"] = authors
         return book
     
-    newListBooks =  tuple(map(mapListBooks , books))
+    newListBooks: list[dict] =  list(map(mapListBooks , books))
 
-    print(f"\nSe actualizó el libro con el id: {id}")
+    print(f"\nSe actualizó el libro con el id: {id}\n")
 
     return newListBooks 
 
 #-------------------------------------------- Opción 10 --------------------------------------------
-def option10(books):
+def option10(books: list[dict]):
     with open("books.csv", "w", encoding="utf-8", newline="\n") as f_write:
-        fieldnames = ["id", "title", "genre", "ISBN", "editorial", "authors"]
+        fieldnames: list[str] = ["id", "title", "genre", "isbn", "editorial", "authors"]
 
-        register = csv.DictWriter(f_write, fieldnames=fieldnames)
+        register: csv.DictWriter[str] = csv.DictWriter(f_write, fieldnames=fieldnames)
         register.writeheader()
         register.writerows(books[:])
     
-    print("\nCAMBIOS GUARDADOS")
+    print("\nCAMBIOS GUARDADOS\n")
 
-#-------------------------------------------- Ejecución del Programa --------------------------------------------
+#-------------------------------------------- Ejecución Del Programa --------------------------------------------
 def showOptions():
     print("Elije una de las siguientes opciones:")
     print('''    Opción 1: Leer archivo de disco duro (.txt o csv).
@@ -249,19 +268,19 @@ def showOptions():
     Opción 10: Guardar libros en archivo de disco duro (.txt o csv).
     ''')
 
-optionsNumber = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+optionsNumber: list[str] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
-books = loadBooks()
+books: list[dict] = loadBooks()
 while True:
     os.system("cls")
-    print("2BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
+    print("BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
     showOptions()
 
     while True:
-        option = input("Ingrese el número de una opción: ")
+        option: str = input("Ingrese el número de una opción: ")
         
         if option in optionsNumber:
-            option = int(option)
+            option: int = int(option)
             break
 
     if option == 1:
@@ -288,7 +307,7 @@ while True:
     print("----------------------------------------------")
 
     while True:
-        proceed = input("¿Desea elegir otra opción? S/N: ").upper()
+        proceed: str = input("¿Desea elegir otra opción? S/N: ").upper()
         if proceed == "S" or proceed == "N":
             break
 

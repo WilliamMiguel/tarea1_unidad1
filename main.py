@@ -86,11 +86,21 @@ def option02(books: list[dict]) -> None:
     print("Carga completa\n")
 
 #-------------------------------------------- Opción 03 --------------------------------------------
-def option03(books: list[dict]) -> list[dict]:
+def option03(idsAll: list[str], books: list[dict]) -> list[dict]:
     print("\nAGREGANDO UN LIBRO...\n")
     
+    # Combinamos los ids de todos los libros
+    setIds =  set(idsAll + [book["id"] for book in books])
+
     id: str = isEmpty("Ingrese el ID: ")
-    title: str = isEmpty("Ingrese el título: ")
+
+    while True: 
+        if (id in setIds):
+            id = input("El id ya se encuentra registrado. Ingrese nuevamente el ID: ")
+            continue
+        break
+
+    title: str = isEmpty("\nIngrese el título: ")
     genre: str = isEmpty("Ingrese el género: ")
     isbn: str = isEmpty("Ingrese el ISBN: ")
     editorial: str = isEmpty("Ingrese la editorial: ")
@@ -268,7 +278,9 @@ optionsNumber: list[str] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 booksAll: list[dict] = loadBooks()
 booksSelected: list[dict] = []
 # Variable que decidirá si hubo una eliminación o un agregado
-ids:list[str] = []
+idsSelected:list[str] = []
+# Variable que nos servirá para validar que no haya id repetidos
+idsAll: list[str] =  [book["id"] for book in booksAll]
 
 while True:
     os.system("cls")
@@ -283,12 +295,13 @@ while True:
             break
 
     if option == 1:
+        booksAll = loadBooks()
         booksSelected = option01(booksAll)
-        ids = [book["id"] for book in booksSelected]
+        idsSelected = [book["id"] for book in booksSelected]
     if option == 2:
         option02(booksSelected)
     if option == 3:
-        booksSelected = option03(booksSelected)
+        booksSelected = option03(idsAll, booksSelected)
     if option == 4:
         booksSelected = option04(booksSelected)
     if option == 5:
@@ -303,22 +316,26 @@ while True:
         booksSelected = option09(booksSelected)
     if option == 10:
         newBooks: list[dict] = []
+        booksSelectedForExtract: list[dict] = booksSelected
         
+        # ----------------------------------- Para El Eliminado y Actualización -----------------------------------
         # Recorriendo todos los libros
         for book in booksAll:
+            if (book["id"] not in idsSelected): 
+                newBooks.append(book)
+                continue
+
             # Recorriendo todos los libros seleccionados
             for bookSe in booksSelected:
                 # En caso de que se haya actualizado se agregará el libro seleccionado en la nueva lista
                 if (book["id"] == bookSe["id"]):
                     newBooks.append(bookSe)
+                    booksSelectedForExtract.remove(bookSe)
                     break 
-                # En caso de que se haya agregado un nuevo libro a la lista de seleccionado
-                if (bookSe["id"] not in ids):
-                    newBooks.append(bookSe)
-                    break
-                if (book["id"] not in ids): 
-                    newBooks.append(book)
-                    break
+
+        # ----------------------------------- Para La Inserción -----------------------------------
+        for book in booksSelectedForExtract:
+            newBooks.append(book)
 
         option10(newBooks)
 

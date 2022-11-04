@@ -322,8 +322,7 @@ while True:
                     break
 
         option10(newBooks)
-       
-
+  
     print("----------------------------------------------")
 
     while True:

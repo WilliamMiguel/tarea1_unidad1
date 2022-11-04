@@ -2,7 +2,6 @@
 from libro import *
 import os
 import csv
-import time
 
 #os.system("pip install tabulate")
 
@@ -284,7 +283,7 @@ while True:
             break
 
     if option == 1:
-        books = option01()
+        booksSelected = option01(booksAll)
         ids = [book["id"] for book in booksSelected]
     if option == 2:
         option02(booksSelected)
@@ -301,10 +300,10 @@ while True:
     if option == 8:
         option08(booksSelected)
     if option == 9:
-        books = option09(booksSelected)
+        booksSelected = option09(booksSelected)
     if option == 10:
         newBooks: list[dict] = []
-            
+        
         # Recorriendo todos los libros
         for book in booksAll:
             # Recorriendo todos los libros seleccionados
@@ -322,7 +321,7 @@ while True:
                     break
 
         option10(newBooks)
-  
+
     print("----------------------------------------------")
 
     while True:
@@ -335,4 +334,3 @@ while True:
         continue
     else:
         break
-

@@ -1,8 +1,9 @@
 import os
+import re
 import requests
 import json
 os.system("cls")
-os.system("pip install tabulate")
+# os.system("pip install tabulate")
 from tabulate import tabulate
 
 url = "https://pokeapi.co/api/v2/"
@@ -61,34 +62,67 @@ def option03(info=info):
 
     respAbility = requests.get(urlAbility).json()
     countAbilities = respAbility["count"]
-    urlAllAbilities = "https://pokeapi.co/api/v2/ability/?offset=0&limit=" + \
-        str(countAbilities)
+    urlAllAbilities = "https://pokeapi.co/api/v2/ability/?offset=0&limit=" + str(countAbilities)
     jsonAbilities = requests.get(urlAllAbilities).json()
-
+    listAbilities = [ability["name"] for ability in jsonAbilities["results"]]
+    
     while True:
-        firstLetter = input("Ingresa la primera letra de la habilidad: ").lower()
-        if firstLetter.isalpha() and len(firstLetter) == 1:
+        letters = input("Ingresa la habilidad (o las primeras letras): ").lower()
+        if letters.isalpha():
+            selectedAbilities = []
+            patron = re.compile('^' + letters)
+            for ability in listAbilities:
+                if patron.match(ability):
+                    selectedAbilities.append(ability.capitalize())
+            if selectedAbilities == []:
+                print("Vuelve a intentar con otras letras")
+                continue
             break
-        
+
+    print("\nENCONTRAMOS LAS SIGUIENTES HABILIDADES\n")
+    availableAbility = []
+    for index, ability in enumerate(selectedAbilities,1):
+        print(f"{index}: {ability}")
+        availableAbility.append(index)
+
+    print()
+    while True:
+        selection = input("Ingresa T para ver los pokemones de todas las habilidades o U para elegir una habilidad: ").upper()
+        if selection == "T":
+            break
+        elif selection == "U":
+            print()
+            while True:
+                numberAbility = input("Ingresa el número de la habilidad: ")
+                if numberAbility.isnumeric() and int(numberAbility) in availableAbility:
+                    numberAbility = int(numberAbility)
+                    break
+            break
+
     print("\nBUSCANDO POKEMONES...\n")
-    listAbilities = []
+
     listPokemons = []
-    for ability in jsonAbilities["results"]:
-        if ability["name"][0] == firstLetter:
-            listAbilities.append(ability["name"].capitalize())
-            jsonPokemons = requests.get(urlAbility + ability["name"]).json()
-            pokemons = [pokemon["pokemon"]["name"] for pokemon in jsonPokemons["pokemon"]]
+    if selection == "T":
+        for ability in selectedAbilities:
+            jsonPokemons = requests.get(urlAbility + ability.lower()).json()
+            pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
             if pokemons == []:
-                listPokemons.append("No hay información")
+                listPokemons.append("No hay pokemones")
             else:
                 listPokemons.append(pokemons)
-    
-    if listAbilities == []:
-        print(f"No encontramos pokemones con habilidades que empiezan por {firstLetter.upper()}")
-    else:
         fieldnames = ["Habilidad", "Pokemones"]
-        tuplePokemons = zip(listAbilities,listPokemons)
+        tuplePokemons = zip(selectedAbilities,listPokemons)
         print(tabulate(tuplePokemons,fieldnames))
-
+    
+    else:
+        jsonPokemons = requests.get(urlAbility + selectedAbilities[numberAbility-1].lower()).json()
+        pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
+        if pokemons == []:
+                pokemons.append("No hay pokemones")
+        print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}")
+        print("Pokemones:")
+        print(*pokemons, sep= ", ")
+    
+    print("\nCARGA COMPLETA")
 
 option03(info)

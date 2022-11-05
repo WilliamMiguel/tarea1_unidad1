@@ -10,20 +10,6 @@ url = "https://pokeapi.co/api/v2/"
 resp = requests.get(url)
 info = resp.json()
 
-
-# def generator(urlPokemons: list, firstLimit: int, secondLimit: int):
-#     url = "https://pokeapi.co/api/v2/pokemon/"
-#     for pokemon in range(firstLimit, secondLimit):
-#         info = requests.get(urlPokemons[pokemon]).json()
-#         nameDefault = info["varieties"][0]["pokemon"]["name"]
-#         jsonData = requests.get(url + nameDefault).json()
-#         abilities = [data["ability"]["name"] for data in jsonData["abilities"]]
-#         urlImage = jsonData["sprites"]["back_default"]
-#         if urlImage == None:
-#                 urlImage = "Sin imagen"
-        
-#     return nameDefault, abilities, urlImage
-
 def isNumber(text: str):
     while True:
         value = input(text)
@@ -62,7 +48,7 @@ def option02(info=info):
     optionsShapes = [str(option + 1) for option in range(countShapes)]
     print("Elige la forma de pokemones...\n")
     for index, shape in enumerate(respShape["results"], 1):
-        print("    Opción " + str(index) + ": " + shape["name"].capitalize())
+        print("    " + str(index) + ": " + shape["name"].capitalize())
 
     print()
     while True:
@@ -109,7 +95,7 @@ def option02(info=info):
 
     print("\nCARGA COMPLETA")
 
-# option02(info)
+option02(info)
 
 # ------------------------Opción 3-----------------------------------
 
@@ -205,5 +191,5 @@ def option03(info=info):
                     break
         break
 
-option03(info)
+# option03(info)
 

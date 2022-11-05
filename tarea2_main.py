@@ -33,7 +33,6 @@ def isNumber(text: str):
     return value
 
 def infoPokemons(pokemons: list, selection: str, firstLimit, secondLimit: int) -> list:
-    print(pokemons)
     dataPokemons = []
     imagePokemons = []
     numberPokemon = firstLimit
@@ -106,18 +105,11 @@ def option02(info=info):
             tuplePokemons = zip(pokemons[firstLimit:secondLimit], dataPokemons[0], dataPokemons[1])
             fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
             print(tabulate(tuplePokemons, headers=fieldnames))
-
             break
 
-    # dataPokemons = infoPokemons(urlPokemons,"abilities")
-    # tuplePokemons = zip(pokemons, dataPokemons[0], dataPokemons[1])
-    # fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
-    # print(tabulate(tuplePokemons, headers=fieldnames))
+    print("\nCARGA COMPLETA")
 
-option02(info)
-
-
-
+# option02(info)
 
 # ------------------------Opción 3-----------------------------------
 
@@ -190,5 +182,5 @@ def option03(info=info):
     
     print("\nCARGA COMPLETA")
 
-# option03(info)
+option03(info)
 

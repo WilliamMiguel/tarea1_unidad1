@@ -83,7 +83,7 @@ def option03(info = info):
 
     ability = info["ability"]
     respAbility = requests.get(ability).json()
-    countAbility = respAbility["count"]
+    # countAbility = respAbility["count"]
     abilityGenerator = generator(limitInf, limitSup)
     nameAbility =[]
     pokeAbility = []

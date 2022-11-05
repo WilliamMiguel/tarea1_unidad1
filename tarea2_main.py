@@ -1,9 +1,9 @@
-from tabulate import tabulate
 import os
 import requests
 import json
 os.system("cls")
-# os.system("pip install tabulate")
+os.system("pip install tabulate")
+from tabulate import tabulate
 
 url = "https://pokeapi.co/api/v2/"
 resp = requests.get(url)
@@ -14,16 +14,11 @@ def abilitiesPokemons(pokemons: list) -> list:
     abilitiesofPokemons = []
     for pokemon in pokemons:
         url = "https://pokeapi.co/api/v2/pokemon/"
-        try:
-            info = requests.get(url + pokemon.lower()).json()
-        except:
-            abilitiesofPokemons.append(["No hay información"])
-            continue
-        else:
-            abilities = [ability["ability"]["name"]
-                         for ability in info["abilities"]]
-
-            abilitiesofPokemons.append(abilities)
+        info = requests.get(pokemon).json()
+        nameDefault = info["varieties"][0]["pokemon"]["name"]
+        jsonabilities = requests.get(url + nameDefault).json()
+        abilities = [ability["ability"]["name"] for ability in jsonabilities["abilities"]]
+        abilitiesofPokemons.append(abilities)
 
     return abilitiesofPokemons
 
@@ -46,17 +41,17 @@ def option02(info=info):
 
     urlShape = respShape["results"][int(selectionShape)-1]["url"]
     jsonShape = requests.get(urlShape).json()
-    pokemons = [pokemon["name"].capitalize()
-                for pokemon in jsonShape["pokemon_species"]]
+    pokemons = [pokemon["name"].capitalize() for pokemon in jsonShape["pokemon_species"]]
+    urlPokemons = [pokemon["url"] for pokemon in jsonShape["pokemon_species"]]
+
     print(f"\nENCONTRAMOS {len(pokemons)} POKEMONES")
     print(f"\nCARGANDO SUS HABILIDADES...\n")
-    abilities = abilitiesPokemons(pokemons)
+    abilities = abilitiesPokemons(urlPokemons)
     tuplePokemons = zip(pokemons, abilities)
     fieldnames = ["Pokemon", "Habilidades"]
     print(tabulate(tuplePokemons, headers=fieldnames))
 
 # option02(info)
-
 
 # ------------------------Opción 3-----------------------------------
 
@@ -70,23 +65,30 @@ def option03(info=info):
         str(countAbilities)
     jsonAbilities = requests.get(urlAllAbilities).json()
 
-    firstLetter = input("Ingresa la primera letra de la habilidad: ")
+    while True:
+        firstLetter = input("Ingresa la primera letra de la habilidad: ").lower()
+        if firstLetter.isalpha() and len(firstLetter) == 1:
+            break
+        
     print("\nBUSCANDO POKEMONES...\n")
-    listabilities = []
+    listAbilities = []
     listPokemons = []
     for ability in jsonAbilities["results"]:
         if ability["name"][0] == firstLetter:
-            listabilities.append(ability["name"])
+            listAbilities.append(ability["name"].capitalize())
             jsonPokemons = requests.get(urlAbility + ability["name"]).json()
             pokemons = [pokemon["pokemon"]["name"] for pokemon in jsonPokemons["pokemon"]]
             if pokemons == []:
                 listPokemons.append("No hay información")
             else:
                 listPokemons.append(pokemons)
-
-    print(listabilities)
-    print("-----------------------------------")
-    print(listPokemons)
+    
+    if listAbilities == []:
+        print(f"No encontramos pokemones con habilidades que empiezan por {firstLetter.upper()}")
+    else:
+        fieldnames = ["Habilidad", "Pokemones"]
+        tuplePokemons = zip(listAbilities,listPokemons)
+        print(tabulate(tuplePokemons,fieldnames))
 
 
 option03(info)

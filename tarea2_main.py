@@ -11,17 +11,49 @@ resp = requests.get(url)
 info = resp.json()
 
 
-def abilitiesPokemons(pokemons: list) -> list:
-    abilitiesofPokemons = []
-    for pokemon in pokemons:
-        url = "https://pokeapi.co/api/v2/pokemon/"
-        info = requests.get(pokemon).json()
+def generator(urlPokemons: list, firstLimit: int, secondLimit: int):
+    url = "https://pokeapi.co/api/v2/pokemon/"
+    for pokemon in range(firstLimit, secondLimit):
+        info = requests.get(urlPokemons[pokemon]).json()
         nameDefault = info["varieties"][0]["pokemon"]["name"]
-        jsonabilities = requests.get(url + nameDefault).json()
-        abilities = [ability["ability"]["name"] for ability in jsonabilities["abilities"]]
-        abilitiesofPokemons.append(abilities)
+        jsonData = requests.get(url + nameDefault).json()
+        abilities = [data["ability"]["name"] for data in jsonData["abilities"]]
+        urlImage = jsonData["sprites"]["back_default"]
+        if urlImage == None:
+                urlImage = "Sin imagen"
+        
+    return nameDefault, abilities, urlImage
 
-    return abilitiesofPokemons
+def isNumber(text: str):
+    while True:
+        value = input(text)
+        if value.isnumeric():
+            value = int(value)
+            break
+    return value
+
+def infoPokemons(pokemons: list, selection: str, firstLimit, secondLimit: int) -> list:
+    print(pokemons)
+    dataPokemons = []
+    imagePokemons = []
+    numberPokemon = firstLimit
+    for pokemon in range(firstLimit, secondLimit):
+        url = "https://pokeapi.co/api/v2/pokemon/"
+        info = requests.get(pokemons[numberPokemon]).json()
+        nameDefault = info["varieties"][0]["pokemon"]["name"]
+        jsonData = requests.get(url + nameDefault).json()
+        if selection == "abilities":
+            dataAbilities = [data["ability"]["name"] for data in jsonData["abilities"]]
+            dataPokemons.append(dataAbilities)
+        dataImages = jsonData["sprites"]["back_default"]
+        if dataImages == None:
+            imagePokemons.append("Sin imagen")
+        else:
+            imagePokemons.append(dataImages)
+
+        numberPokemon += 1
+        
+    return dataPokemons, imagePokemons
 
 
 def option02(info=info):
@@ -45,14 +77,47 @@ def option02(info=info):
     pokemons = [pokemon["name"].capitalize() for pokemon in jsonShape["pokemon_species"]]
     urlPokemons = [pokemon["url"] for pokemon in jsonShape["pokemon_species"]]
 
-    print(f"\nENCONTRAMOS {len(pokemons)} POKEMONES")
-    print(f"\nCARGANDO SUS HABILIDADES...\n")
-    abilities = abilitiesPokemons(urlPokemons)
-    tuplePokemons = zip(pokemons, abilities)
-    fieldnames = ["Pokemon", "Habilidades"]
-    print(tabulate(tuplePokemons, headers=fieldnames))
+    print(f"\nENCONTRAMOS {len(pokemons)} POKEMONES\n")
 
-# option02(info)
+    while True:
+        showPokemons = input("¿MOSTRAR TODOS? S/N: ").upper()
+        if showPokemons == "S":
+            print(f"\nCARGANDO SUS HABILIDADES...\n")
+            dataPokemons = infoPokemons(urlPokemons,"abilities", 0, len(pokemons))
+            tuplePokemons = zip(pokemons, dataPokemons[0], dataPokemons[1])
+            fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
+            print(tabulate(tuplePokemons, headers=fieldnames))
+            break
+
+
+        elif showPokemons == "N":
+            print("\nINGRESA UN RANGO")
+            print()
+            while True:
+                firstLimit = isNumber("LÍMITE INFERIOR: ")
+                secondLimit = isNumber("LÍMITE SUPERIOR: ")
+                if firstLimit > secondLimit or secondLimit > len(pokemons):
+                    print("VUELVE A INGRESAR LOS LÍMITES")
+                    continue
+                break
+
+            print(f"\nCARGANDO SUS HABILIDADES...\n")
+            dataPokemons = infoPokemons(urlPokemons,"abilities", firstLimit, secondLimit)
+            tuplePokemons = zip(pokemons[firstLimit:secondLimit], dataPokemons[0], dataPokemons[1])
+            fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
+            print(tabulate(tuplePokemons, headers=fieldnames))
+
+            break
+
+    # dataPokemons = infoPokemons(urlPokemons,"abilities")
+    # tuplePokemons = zip(pokemons, dataPokemons[0], dataPokemons[1])
+    # fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
+    # print(tabulate(tuplePokemons, headers=fieldnames))
+
+option02(info)
+
+
+
 
 # ------------------------Opción 3-----------------------------------
 
@@ -82,7 +147,7 @@ def option03(info=info):
     print("\nENCONTRAMOS LAS SIGUIENTES HABILIDADES\n")
     availableAbility = []
     for index, ability in enumerate(selectedAbilities,1):
-        print(f"{index}: {ability}")
+        print(f"    {index}: {ability}")
         availableAbility.append(index)
 
     print()
@@ -125,4 +190,5 @@ def option03(info=info):
     
     print("\nCARGA COMPLETA")
 
-option03(info)
+# option03(info)
+

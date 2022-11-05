@@ -1,6 +1,6 @@
 class Libro:
-    def __init__(self, _id: int , title: str, genre: str, isbn: str, editorial: str, authors: str) -> None:
-        self.__id = _id
+    def __init__(self, id: str , title: str, genre: str, isbn: str, editorial: str, authors: str) -> None:
+        self.__id = id
         self.__title = title
         self.__genre = genre
         self.__isbn = isbn
@@ -8,10 +8,10 @@ class Libro:
         self.__authors = authors
         self.__book = {}
 
-    def set_id(self, _id: int) -> None:
-        self.__id = _id
+    def set_id(self, id: str) -> None:
+        self.__id = id
     
-    def get_id(self) -> int:
+    def get_id(self) -> str:
         return self.__id 
 
     def set_title(self, title: str) -> None:
@@ -44,21 +44,13 @@ class Libro:
     def get_autor(self) -> str:
         return self.__authors
 
-    def registro(self):
+    def registro(self) -> None:
         self.__book["id"] = self.__id
         self.__book["title"] = self.__title
         self.__book["genre"] = self.__genre
-        self.__book["ISBN"] = self.__isbn
+        self.__book["isbn"] = self.__isbn
         self.__book["editorial"] = self.__editorial
         self.__book["authors"] = self.__authors
 
-    def get_book(self):
+    def get_book(self) -> dict:
         return self.__book
-
-    # def showBook(self):
-    #     print(f"Título: {self.__title}")
-    #     print(f"Género: {self.__genre}")
-    #     print(f"ISBN: {self.__isbn}")
-    #     print(f"Editorial: {self.__editorial}")
-    #     print("Autor(es):")
-    #     print(*self.__authors, sep=", ")

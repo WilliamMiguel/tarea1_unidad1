@@ -144,55 +144,66 @@ def option03(info=info):
 
     print()
     while True:
-        selection = input("¿Ver todas las habilidades o elegir una? T/U: ").upper()
-        if selection == "T":
+        selection = input("¿VER TODAS LAS HABILIDADES O ELEGIR UNA? T/U: ").upper()
+        if selection == "T" or selection == "U":
             break
+
+    while True:
+        if selection == "T":
+            print("\nBUSCANDO POKEMONES...\n")
+            listPokemons = []
+            for ability in selectedAbilities:
+                jsonPokemons = requests.get(urlAbility + ability.lower()).json()
+                pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
+                if pokemons == []:
+                    listPokemons.append("No hay pokemones")
+                else:
+                    listPokemons.append(pokemons)
+            fieldnames = ["Habilidad", "Pokemones"]
+            tuplePokemons = zip(selectedAbilities,listPokemons)
+            print(tabulate(tuplePokemons,fieldnames))
+            break
+
         elif selection == "U":
             print()
             while True:
-                numberAbility = input("Ingresa el número de la habilidad: ")
-                if numberAbility.isnumeric() and int(numberAbility) in availableAbility:
-                    numberAbility = int(numberAbility)
+                while True:
+                    numberAbility = input("INGRESA EL NÚMERO DE LA HABILIDAD: ")
+                    if numberAbility.isnumeric() and int(numberAbility) in availableAbility:
+                        numberAbility = int(numberAbility)
+                        break
+
+                print("\nBUSCANDO POKEMONES...\n")
+
+                jsonPokemons = requests.get(urlAbility + selectedAbilities[numberAbility-1].lower()).json()
+                pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
+                urlPokemons = [pokemon["pokemon"]["url"] for pokemon in jsonPokemons["pokemon"]]
+                imagePokemons = []
+                for pokemon in urlPokemons:
+                    jsonData = requests.get(pokemon).json()
+                    dataImages = jsonData["sprites"]["back_default"]
+                    if dataImages == None:
+                        imagePokemons.append("Sin imagen")
+                    else:
+                        imagePokemons.append(dataImages)
+                if pokemons == None:
+                        pokemons.append("No hay pokemones")
+
+                print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}\n")
+                tuplePokemons = zip(pokemons, imagePokemons)
+                fieldnames = ["Pokemon", "URL Imagen"]
+                print(tabulate(tuplePokemons, headers= fieldnames))
+                
+                print("\nCARGA COMPLETA\n")
+
+                anotherAbility = input("¿SELECCIONAR OTRA HABILIDAD? S/N: ").upper()
+                if anotherAbility == "S":
+                    print()
+                    continue
+                elif anotherAbility == "N":
+                    print()
                     break
-            break
-
-    print("\nBUSCANDO POKEMONES...\n")
-
-    listPokemons = []
-    if selection == "T":
-        for ability in selectedAbilities:
-            jsonPokemons = requests.get(urlAbility + ability.lower()).json()
-            pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
-            if pokemons == []:
-                listPokemons.append("No hay pokemones")
-            else:
-                listPokemons.append(pokemons)
-        fieldnames = ["Habilidad", "Pokemones"]
-        tuplePokemons = zip(selectedAbilities,listPokemons)
-        print(tabulate(tuplePokemons,fieldnames))
-    
-    else:
-        jsonPokemons = requests.get(urlAbility + selectedAbilities[numberAbility-1].lower()).json()
-        pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
-        urlPokemons = [pokemon["pokemon"]["url"] for pokemon in jsonPokemons["pokemon"]]
-        imagePokemons = []
-        for pokemon in urlPokemons:
-            jsonData = requests.get(pokemon).json()
-            dataImages = jsonData["sprites"]["back_default"]
-            if dataImages == None:
-                imagePokemons.append("Sin imagen")
-            else:
-                imagePokemons.append(dataImages)
-        if pokemons == None:
-                pokemons.append("No hay pokemones")
-        print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}\n")
-        tuplePokemons = zip(pokemons, imagePokemons)
-        fieldnames = ["Pokemon", "URL Imagen"]
-        print(tabulate(tuplePokemons, headers= fieldnames))
-    
-    print("\nCARGA COMPLETA")
-
-    anotherAbility = input("¿Sleccionar otra habilidad? S/N: ")
+        break
 
 option03(info)
 

@@ -28,7 +28,7 @@ def abilitiesPokemons(pokemons: list) -> list:
     return abilitiesofPokemons
 
 
-def option02(info = info):
+def option02(info=info):
     shape = info["pokemon-shape"]
     respShape = requests.get(shape).json()
     countShapes = respShape["count"]
@@ -57,52 +57,36 @@ def option02(info = info):
 
 # option02(info)
 
-def generator(limitInf, limitSup):
-    url = "https://pokeapi.co/api/v2/ability/"
-    for i in range(limitInf, limitSup + 1):
-        yield url+str(i)
 
-def isNumber(text):
-    while True:
-        value = input(text)
-        if value.isnumeric():
-            break
-    return int(value)
+# ------------------------Opción 3-----------------------------------
 
-def option03(info = info):
-    print("\nINGRESA EL RANGO DE ID DE HABILIDADES QUE DESEAS VISUALIZAR...\n")
-    while True:
-        limitInf = isNumber("Ingresa el ID inferior: ")
-        limitSup = isNumber("Ingresa el ID superior: ")
-        if limitSup > limitInf:
-            break
-        print("Ingresa un ID superior mayor al ID inferior")
-    
+
+def option03(info=info):
+    urlAbility = info["ability"]
+
+    respAbility = requests.get(urlAbility).json()
+    countAbilities = respAbility["count"]
+    urlAllAbilities = "https://pokeapi.co/api/v2/ability/?offset=0&limit=" + \
+        str(countAbilities)
+    jsonAbilities = requests.get(urlAllAbilities).json()
+
+    firstLetter = input("Ingresa la primera letra de la habilidad: ")
     print("\nBUSCANDO POKEMONES...\n")
+    listabilities = []
+    listPokemons = []
+    for ability in jsonAbilities["results"]:
+        if ability["name"][0] == firstLetter:
+            listabilities.append(ability["name"])
+            jsonPokemons = requests.get(urlAbility + ability["name"]).json()
+            pokemons = [pokemon["pokemon"]["name"] for pokemon in jsonPokemons["pokemon"]]
+            if pokemons == []:
+                listPokemons.append("No hay información")
+            else:
+                listPokemons.append(pokemons)
 
-    ability = info["ability"]
-    respAbility = requests.get(ability).json()
-    # countAbility = respAbility["count"]
-    abilityGenerator = generator(limitInf, limitSup)
-    nameAbility =[]
-    pokeAbility = []
-    for ability in range(limitInf,limitSup + 1):
-        urlAbility = next(abilityGenerator)
-        if requests.get(urlAbility).status_code != requests.codes.ok:
-            break
-        jsonAbility = requests.get(urlAbility).json()
-        name = jsonAbility["name"].capitalize()
-        nameAbility.append(name)
-        pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonAbility["pokemon"]]
-        pokeAbility.append(pokemons)
-    
-    if len(nameAbility) == 0:
-        print("No se encontró información entre los IDs especificados")
-    else:
-        tupleAbilities = zip(nameAbility,pokeAbility)
-        print(tabulate(tupleAbilities, headers=["Habilidad", "Pokemones"]))
-
-    print("\nCARGA COMPLETA")
+    print(listabilities)
+    print("-----------------------------------")
+    print(listPokemons)
 
 
 option03(info)

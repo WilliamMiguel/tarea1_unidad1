@@ -57,7 +57,6 @@ def option02(info = info):
 
 # option02(info)
 
-
 def generator(limitInf, limitSup):
     url = "https://pokeapi.co/api/v2/ability/"
     for i in range(limitInf, limitSup + 1):

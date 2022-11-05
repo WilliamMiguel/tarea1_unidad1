@@ -11,18 +11,18 @@ resp = requests.get(url)
 info = resp.json()
 
 
-def generator(urlPokemons: list, firstLimit: int, secondLimit: int):
-    url = "https://pokeapi.co/api/v2/pokemon/"
-    for pokemon in range(firstLimit, secondLimit):
-        info = requests.get(urlPokemons[pokemon]).json()
-        nameDefault = info["varieties"][0]["pokemon"]["name"]
-        jsonData = requests.get(url + nameDefault).json()
-        abilities = [data["ability"]["name"] for data in jsonData["abilities"]]
-        urlImage = jsonData["sprites"]["back_default"]
-        if urlImage == None:
-                urlImage = "Sin imagen"
+# def generator(urlPokemons: list, firstLimit: int, secondLimit: int):
+#     url = "https://pokeapi.co/api/v2/pokemon/"
+#     for pokemon in range(firstLimit, secondLimit):
+#         info = requests.get(urlPokemons[pokemon]).json()
+#         nameDefault = info["varieties"][0]["pokemon"]["name"]
+#         jsonData = requests.get(url + nameDefault).json()
+#         abilities = [data["ability"]["name"] for data in jsonData["abilities"]]
+#         urlImage = jsonData["sprites"]["back_default"]
+#         if urlImage == None:
+#                 urlImage = "Sin imagen"
         
-    return nameDefault, abilities, urlImage
+#     return nameDefault, abilities, urlImage
 
 def isNumber(text: str):
     while True:
@@ -144,7 +144,7 @@ def option03(info=info):
 
     print()
     while True:
-        selection = input("Ingresa T para ver los pokemones de todas las habilidades o U para elegir una habilidad: ").upper()
+        selection = input("¿Ver todas las habilidades o elegir una? T/U: ").upper()
         if selection == "T":
             break
         elif selection == "U":
@@ -174,13 +174,25 @@ def option03(info=info):
     else:
         jsonPokemons = requests.get(urlAbility + selectedAbilities[numberAbility-1].lower()).json()
         pokemons = [pokemon["pokemon"]["name"].capitalize() for pokemon in jsonPokemons["pokemon"]]
-        if pokemons == []:
+        urlPokemons = [pokemon["pokemon"]["url"] for pokemon in jsonPokemons["pokemon"]]
+        imagePokemons = []
+        for pokemon in urlPokemons:
+            jsonData = requests.get(pokemon).json()
+            dataImages = jsonData["sprites"]["back_default"]
+            if dataImages == None:
+                imagePokemons.append("Sin imagen")
+            else:
+                imagePokemons.append(dataImages)
+        if pokemons == None:
                 pokemons.append("No hay pokemones")
-        print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}")
-        print("Pokemones:")
-        print(*pokemons, sep= ", ")
+        print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}\n")
+        tuplePokemons = zip(pokemons, imagePokemons)
+        fieldnames = ["Pokemon", "URL Imagen"]
+        print(tabulate(tuplePokemons, headers= fieldnames))
     
     print("\nCARGA COMPLETA")
+
+    anotherAbility = input("¿Sleccionar otra habilidad? S/N: ")
 
 option03(info)
 

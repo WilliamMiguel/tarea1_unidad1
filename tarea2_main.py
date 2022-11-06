@@ -3,7 +3,7 @@ import re
 import requests
 import json
 os.system("cls")
-os.system("pip install tabulate")
+#os.system("pip install tabulate")
 from tabulate import tabulate
 
 url = "https://pokeapi.co/api/v2/"

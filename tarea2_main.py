@@ -1,4 +1,15 @@
 import os
+<<<<<<< HEAD
+import requests
+import json
+os.system("cls")
+
+url = "https://pokeapi.co/api/v2/"
+resp = requests.get(url)
+info = json.loads(resp.text)
+
+
+=======
 import re
 import requests
 import json
@@ -192,4 +203,5 @@ def option03(info=info):
         break
 
 # option03(info)
+>>>>>>> william
 

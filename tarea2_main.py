@@ -25,14 +25,14 @@ def infoPokemons(pokemons: list, selection: str, firstLimit, secondLimit: int) -
         url = "https://pokeapi.co/api/v2/pokemon/"
         info = requests.get(pokemons[numberPokemon]).json()
         if ("varieties" in info):
-            nameDefault = info["varieties"][0]["pokemon"]["name"]
-            jsonData = requests.get(url + nameDefault).json()
+            nameDefault = info["varieties"][0]["pokemon"]["name"] #Obtiene el nombre de la primera "variación" del pokemon
+            jsonData = requests.get(url + nameDefault).json() #Obtiene los datos de la primera variación del pokemon
         else:
             jsonData = info
         if selection == "abilities":
             dataAbilities = [data["ability"]["name"] for data in jsonData["abilities"]]
             dataPokemons.append(dataAbilities)
-        dataImages = jsonData["sprites"]["back_default"]
+        dataImages = jsonData["sprites"]["front_default"]
         if dataImages == None:
             imagePokemons.append("Sin imagen")
         else:
@@ -49,19 +49,21 @@ def option02(info = info):
     respShape = requests.get(shape).json()
     countShapes = respShape["count"]
     optionsShapes = [str(option + 1) for option in range(countShapes)]
-    print("Elige una de las siguientes formas: \n")
-    for index, shape in enumerate(respShape["results"], 1):
-        print("    " + str(index) + ": " + shape["name"].capitalize())
+
 
     while True:
+        print("Elige una de las siguientes formas: \n")
+        for index, shape in enumerate(respShape["results"], 1):
+            print("    " + str(index) + ": " + shape["name"].capitalize())
         print()
+
         while True:
             selectionShape = input("Ingresa una opción: ")
             if selectionShape in optionsShapes:
                 selectionShape = int(selectionShape)
                 break
 
-        urlShape = respShape["results"][int(selectionShape)-1]["url"]
+        urlShape = respShape["results"][int(selectionShape)-1]["url"] 
         jsonShape = requests.get(urlShape).json()
         pokemons = [pokemon["name"].capitalize() for pokemon in jsonShape["pokemon_species"]]
         urlPokemons = [pokemon["url"] for pokemon in jsonShape["pokemon_species"]]
@@ -99,6 +101,7 @@ def option02(info = info):
         print("\nCarga completa")
         anotherShape = input("\n¿Elegir otra forma? S/N: ").upper()
         if anotherShape == "S":
+            print()
             continue
         elif anotherShape == "N":
             break
@@ -173,12 +176,12 @@ def option03(info = info):
                     imagePokemons = []
                     for pokemon in urlPokemons:
                         jsonData = requests.get(pokemon).json()
-                        dataImages = jsonData["sprites"]["back_default"]
+                        dataImages = jsonData["sprites"]["front_default"]
                         if dataImages == None:
                             imagePokemons.append("Sin imagen")
                         else:
                             imagePokemons.append(dataImages)
-                    if pokemons == None:
+                    if pokemons == None or pokemons == []:
                             pokemons.append("No hay pokemons")
 
                     print(f"Habilidad: {selectedAbilities[numberAbility-1].capitalize()}\n")
@@ -190,6 +193,9 @@ def option03(info = info):
 
                     anotherAbility = input("¿Seleccionar otra habilidad? S/N: ").upper()
                     if anotherAbility == "S":
+                        print()
+                        for index, ability in enumerate(selectedAbilities,1):
+                            print(f"    {index}: {ability}")
                         print()
                         continue
                     elif anotherAbility == "N":
@@ -278,6 +284,7 @@ def option05(info: dict = info) -> None:
 options = ["option01", "option02(info)", "option03(info)", "option04", "option05(info)"]
 
 def showOptions():
+    print("\t\t\tPOKEAPI\n")
     print("Elije una de las siguientes opciones:\n")
     print('''    Opción 1: Listar pokemons por generación.
     Opción 2: Listar pokemons por forma.

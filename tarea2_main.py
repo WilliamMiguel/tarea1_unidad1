@@ -24,8 +24,11 @@ def infoPokemons(pokemons: list, selection: str, firstLimit, secondLimit: int) -
     for pokemon in range(firstLimit, secondLimit):
         url = "https://pokeapi.co/api/v2/pokemon/"
         info = requests.get(pokemons[numberPokemon]).json()
-        nameDefault = info["varieties"][0]["pokemon"]["name"]
-        jsonData = requests.get(url + nameDefault).json()
+        if ("varieties" in info):
+            nameDefault = info["varieties"][0]["pokemon"]["name"]
+            jsonData = requests.get(url + nameDefault).json()
+        else:
+            jsonData = info
         if selection == "abilities":
             dataAbilities = [data["ability"]["name"] for data in jsonData["abilities"]]
             dataPokemons.append(dataAbilities)
@@ -39,7 +42,7 @@ def infoPokemons(pokemons: list, selection: str, firstLimit, secondLimit: int) -
         
     return dataPokemons, imagePokemons
 
-#---------------------------Opción 2-----------------------
+# ------------------------Opción 02 -----------------------------------
 def option02(info = info):
     print()
     shape = info["pokemon-shape"]
@@ -231,3 +234,75 @@ while True:
         break
 
 
+
+# ------------------------Opción 05-----------------------------------
+def option05(info: dict = info) -> None: 
+    urlType = info["type"]
+
+    resultType: dict = requests.get(urlType).json()
+    types: dict = resultType["results"]
+    numberType: str = 0
+    listTypesNumbers: range =  range(1, resultType['count'] + 1)
+
+    print(f"Selecciona el tipo de pokemon a listar, se cuenta con {resultType['count']} tipos:\n")
+
+    for index, typeP in enumerate(types, start = 1):
+        print("    Opción " + str(index) + ": " + typeP["name"].capitalize())
+    
+    numberType =  input("\nIngrese el número de tipo a listar: ")
+
+    while True:
+        if (not(numberType.isnumeric()) or int(numberType) not in listTypesNumbers):
+            numberType = input(f"Opción inválida el {numberType} no se encuentra en la lista de los tipos de pokemones. Ingrese nuevamente el número de tipo a listar: ")
+            continue
+
+        numberType: int = int(numberType) - 1
+        break
+
+    nameType = types[numberType]["name"]
+    urlPokemonType = types[numberType]["url"]
+        
+    # ---- Obteniendo las habilidades de los pokemones
+    resultPokemons: dict = requests.get(urlPokemonType).json()
+
+    pokemonsNames = [pokemon["pokemon"]["name"].capitalize() for pokemon in resultPokemons["pokemon"]]
+    urlPokemons = [pokemon["pokemon"]["url"] for pokemon in resultPokemons["pokemon"]]
+    numbersPokemons = len(pokemonsNames)
+    dataPokemons = []
+
+    firstLimit = 0
+    secondLimit = numbersPokemons
+   
+    if (not urlPokemons):
+        print(f"\nNo hay pokemones del tipo {nameType}")
+        return
+
+    print(f"\nENCONTRAMOS {numbersPokemons} POKEMONES\n")
+
+    showPokemons = input("¿MOSTRAR TODOS? S/N: ").upper()
+
+    while True:
+        if (showPokemons not in ["S", "N"]):
+            showPokemons = input("SOLO SE ACEPTA 2 VALORES. ¿MOSTRAR TODOS? S/N: ").upper()
+            continue
+
+        if showPokemons == "N":
+            print("\nINGRESA UN RANGO\n")
+
+            while True:
+                firstLimit = isNumber("LÍMITE INFERIOR: ")
+                secondLimit = isNumber("LÍMITE SUPERIOR: ")
+                if firstLimit > secondLimit or secondLimit > numbersPokemons:
+                    print("VUELVE A INGRESAR LOS LÍMITES\n")
+                    continue
+                break
+        break
+
+    print(f"\nCARGANDO SUS HABILIDADES...\n")
+        
+    dataPokemons = infoPokemons(urlPokemons,"abilities", firstLimit, secondLimit)
+    tuplePokemons = zip(pokemonsNames[firstLimit:secondLimit], dataPokemons[0], dataPokemons[1])
+    fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
+        
+    print(tabulate(tuplePokemons, headers=fieldnames))
+#option05()

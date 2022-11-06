@@ -203,40 +203,9 @@ def option03(info = info):
         elif repeat =="N":
             break
 
-options = ["option01", "option02(info)", "option03(info)", "option04", "option05(info)"]
-
-def showOptions():
-    print("Elije una de las siguientes opciones:\n")
-    print('''    Opción 1: Listar pokemons por generación.
-    Opción 2: Listar pokemons por forma.
-    Opción 3: Listar pokemons por habilidad.
-    Opción 4: Listar pokemons por habitat.
-    Opción 5: Listar pokemons por tipo.
-    ''')
-
-numbersOptions = [1, 2, 3, 4, 5]
-print()
-while True:
-    os.system("cls")
-    showOptions()
-    while True:
-        selectOption = input("Ingresa una opción: ")
-        if selectOption.isnumeric() and int(selectOption) in numbersOptions:
-            selectOption = int(selectOption)
-            break
-
-    eval(options[selectOption-1])
-    print()
-    anotherOption = input("¿Seleccionar otra lista? S/N: ").upper()
-    if anotherOption == "S":
-        continue
-    elif anotherOption == "N":
-        break
-
-
-
 # ------------------------Opción 05-----------------------------------
-def option05(info: dict = info) -> None: 
+def option05(info: dict = info) -> None:
+    print()
     urlType = info["type"]
 
     resultType: dict = requests.get(urlType).json()
@@ -277,32 +246,65 @@ def option05(info: dict = info) -> None:
         print(f"\nNo hay pokemones del tipo {nameType}")
         return
 
-    print(f"\nENCONTRAMOS {numbersPokemons} POKEMONES\n")
+    print(f"\nEncontramos {numbersPokemons} pokemons\n")
 
-    showPokemons = input("¿MOSTRAR TODOS? S/N: ").upper()
+    showPokemons = input("¿Mostrar todos? S/N: ").upper()
 
     while True:
         if (showPokemons not in ["S", "N"]):
-            showPokemons = input("SOLO SE ACEPTA 2 VALORES. ¿MOSTRAR TODOS? S/N: ").upper()
+            showPokemons = input("Solo se aceptan 2 valores. ¿Mostrar todos? S/N: ").upper()
             continue
 
         if showPokemons == "N":
-            print("\nINGRESA UN RANGO\n")
+            print("\nIngresa un rango\n")
 
             while True:
-                firstLimit = isNumber("LÍMITE INFERIOR: ")
-                secondLimit = isNumber("LÍMITE SUPERIOR: ")
+                firstLimit = isNumber("Límite inferior: ")
+                secondLimit = isNumber("Límite superior: ")
                 if firstLimit > secondLimit or secondLimit > numbersPokemons:
-                    print("VUELVE A INGRESAR LOS LÍMITES\n")
+                    print("Vuelve a ingresar los límites\n")
                     continue
                 break
         break
 
-    print(f"\nCARGANDO SUS HABILIDADES...\n")
+    print(f"\nIdentificando habilidades...\n")
         
     dataPokemons = infoPokemons(urlPokemons,"abilities", firstLimit, secondLimit)
     tuplePokemons = zip(pokemonsNames[firstLimit:secondLimit], dataPokemons[0], dataPokemons[1])
     fieldnames = ["Pokemon", "Habilidades", "URL Imagen"]
         
     print(tabulate(tuplePokemons, headers=fieldnames))
-#option05()
+
+options = ["option01", "option02(info)", "option03(info)", "option04", "option05(info)"]
+
+def showOptions():
+    print("Elije una de las siguientes opciones:\n")
+    print('''    Opción 1: Listar pokemons por generación.
+    Opción 2: Listar pokemons por forma.
+    Opción 3: Listar pokemons por habilidad.
+    Opción 4: Listar pokemons por habitat.
+    Opción 5: Listar pokemons por tipo.
+    ''')
+
+numbersOptions = [1, 2, 3, 4, 5]
+print()
+while True:
+    os.system("cls")
+    showOptions()
+    while True:
+        selectOption = input("Ingresa una opción: ")
+        if selectOption.isnumeric() and int(selectOption) in numbersOptions:
+            selectOption = int(selectOption)
+            break
+
+    eval(options[selectOption-1])
+    print()
+    anotherOption = input("¿Seleccionar otra lista? S/N: ").upper()
+    if anotherOption == "S":
+        continue
+    elif anotherOption == "N":
+        break
+
+
+
+

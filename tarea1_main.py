@@ -3,7 +3,7 @@ from libro import *
 import os
 import csv
 
-#os.system("pip install tabulate")
+os.system("pip install tabulate")
 
 from tabulate import tabulate
 
@@ -259,32 +259,6 @@ def option10(books: list[dict]):
     
     print("\nCAMBIOS GUARDADOS\n")
 
-# def option10additional():
-#         newBooks: list[dict] = []
-#         booksSelectedForExtract: list[dict] = booksSelected
-        
-#         # ----------------------------------- Para El Eliminado y Actualización -----------------------------------
-#         # Recorriendo todos los libros
-#         for book in booksAll:
-#             if (book["id"] not in idsSelected): 
-#                 newBooks.append(book)
-#                 continue
-
-#             # Recorriendo todos los libros seleccionados
-#             for bookSe in booksSelected:
-#                 # En caso de que se haya actualizado se agregará el libro seleccionado en la nueva lista
-#                 if (book["id"] == bookSe["id"]):
-#                     newBooks.append(bookSe)
-#                     booksSelectedForExtract.remove(bookSe)
-#                     break 
-
-#         # ----------------------------------- Para La Inserción -----------------------------------
-#         for book in booksSelectedForExtract:
-#             newBooks.append(book)
-
-#         return newBooks
-
-
 #-------------------------------------------- Ejecución Del Programa --------------------------------------------
 def showOptions():
     print("Elije una de las siguientes opciones:")
@@ -312,7 +286,7 @@ idsAll: list[str] =  [book["id"] for book in booksAll]
 saveChanges = 0
 
 while True:
-    # os.system("cls")
+    os.system("cls")
     print("BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
     showOptions()
 
@@ -330,7 +304,6 @@ while True:
     if option == 2:
         if booksSelected == []:
             booksSelected = booksAll
-        # print(type(booksSelected))
         option02(booksSelected)
     if option == 3:
         if booksSelected == []:
@@ -364,7 +337,6 @@ while True:
         saveChanges = 1
         if booksSelected == []:
             booksSelected = booksAll
-        # newBooks = option10additional()
         option10(booksSelected)
 
     print("----------------------------------------------")
@@ -385,6 +357,5 @@ while True:
             if saveChanges == "S":
                 break
             else:
-                # newBooks = option10additional()
                 option10(booksSelected)
         break

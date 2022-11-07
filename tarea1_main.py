@@ -3,8 +3,8 @@ from libro import *
 import os
 import csv
 
-#os.system("pip install tabulate")
-#os.system("pip install colorama")
+os.system("pip install tabulate")
+os.system("pip install colorama")
 
 from tabulate import tabulate
 from colorama import init,Back,Fore,Style

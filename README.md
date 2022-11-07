@@ -3,5 +3,5 @@ Proyecto fin de unidad 1
 Integrantes:
 
 - Luz Vivanco
-- Rodolfo Andre
-- William Vilca
+- Rodolfo Andre Caballero Vilela
+- William Miguel Vilca Huaripata

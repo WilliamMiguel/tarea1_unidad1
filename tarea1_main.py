@@ -3,9 +3,13 @@ from libro import *
 import os
 import csv
 
-os.system("pip install tabulate")
+#os.system("pip install tabulate")
+#os.system("pip install colorama")
 
 from tabulate import tabulate
+from colorama import init,Back,Fore,Style
+
+init(autoreset = True)
 
 #-------------------------------------------- Cargar Libros --------------------------------------------
 def loadBooks() -> list[dict]:
@@ -37,7 +41,7 @@ def validateId(id: str, books: list[str], messageInvalidId: str) -> str:
 
     while True:
         if id not in ids:
-            id = input(messageInvalidId)
+            id = input(Fore.RED + messageInvalidId)
             continue
         break
 
@@ -73,17 +77,17 @@ def option01(books:list[dict]) -> list[dict]:
     print("\nCARGANDO LIBROS...\n")
 
     if bookNumber < int(upBooks):
-        print(f"ENCONTRAMOS {bookNumber} LIBROS\n")
+        print(Fore.YELLOW + f"ENCONTRAMOS {bookNumber} LIBROS\n")
     else:
-        print("CARGA COMPLETA\n")
+        print(Fore.GREEN + "CARGA COMPLETA\n")
 
     return newBooks
 
 #-------------------------------------------- Opción 02 --------------------------------------------
 def option02(books: list[dict]) -> None:
-    print("\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
+    print(Fore.LIGHTBLUE_EX + "\nCONTAMOS CON LOS SIGUIENTES LIBROS...\n")
     tableBooks(books)
-    print("Carga completa\n")
+    print(Fore.GREEN + "Carga completa\n")
 
 #-------------------------------------------- Opción 03 --------------------------------------------
 def option03(idsAll: list[str], books: list[dict]) -> list[dict]:
@@ -96,11 +100,11 @@ def option03(idsAll: list[str], books: list[dict]) -> list[dict]:
 
     while True: 
         if (id in setIds):
-            id = input("El id ya se encuentra registrado. Ingrese nuevamente el ID: ")
+            id = input(Fore.RED+"El id ya se encuentra registrado. Ingrese nuevamente el ID: " + Fore.RESET)
             continue
         break
     
-    title: str = isEmpty("Ingrese el título: ")
+    title: str = isEmpty("\nIngrese el título: ")
     genre: str = isEmpty("Ingrese el género: ")
     isbn: str = isEmpty("Ingrese el ISBN: ")
     editorial: str = isEmpty("Ingrese la editorial: ")
@@ -110,23 +114,23 @@ def option03(idsAll: list[str], books: list[dict]) -> list[dict]:
     book.registro()
     books.append(book.get_book())
 
-    print("\nSe agregó un libro\n")
+    print(Fore.GREEN+"\nSe agregó un libro\n")
     return books
 
 #-------------------------------------------- Opción 04 --------------------------------------------
 def option04(books: list[dict]) -> list[dict]:
-    print("\nEliminando libro\n")
+    print(Fore.RED+"\nEliminando libro\n")
 
     id: str = input("Ingrese el id del libro a eliminar: ")
-   
-    id = validateId(id, books, "Id inválido. Ingresa nuevamente el id del libro a eliminar: ")
+
+    id = validateId(id, books, "Id inválido. Ingresa nuevamente el id del libro a eliminar: " + Fore.RESET)
 
     def filterListBooks(book: dict):
         if book["id"] != id: return book
     
     newListBooks: list[dict] =  list(filter(filterListBooks , books))
 
-    print(f"\nSe eliminó el libro con el id: {id}\n")
+    print(Fore.RED+f"\nSe eliminó el libro con el id: {id}\n")
 
     return newListBooks 
 
@@ -152,7 +156,7 @@ def option05or07(optionType: int, books: list[dict]) -> None:
     search: str = ""
     while (True):
         if (search not in listOptions):
-            search = input("Ingrese la opción de búsqueda: ")
+            search = input(Fore.GREEN+"Ingrese la opción de búsqueda: ")
             continue
         break
 
@@ -178,6 +182,8 @@ def option05or07(optionType: int, books: list[dict]) -> None:
                 continue
         break
     
+    print()
+
     searchFilter: str = ""
     if (search == "1") : 
         if (isOption05) : searchFilter = "isbn"
@@ -203,7 +209,7 @@ def option08(books: list[dict]) -> None:
     numberAuthors: str = ""
     while (True) :
         if (not(numberAuthors.isnumeric())) :
-            numberAuthors = input("\nIngrese el número de autores: ")
+            numberAuthors = input(Fore.GREEN+"\nIngrese el número de autores: ")
             continue
         
         numberAuthors: int = int(numberAuthors)
@@ -220,11 +226,11 @@ def option08(books: list[dict]) -> None:
 
 #-------------------------------------------- Opción 09 --------------------------------------------
 def option09(books: list[dict]) -> list[dict]:
-    print("\nActualizando libro\n")
+    print(Fore.GREEN+"\nActualizando libro\n")
 
     id:str = input("Ingrese el id del libro a modificar: ")
 
-    id = validateId(id, books, "Id inválido. Ingresa nuevamente el id del libro a actualiazar: ")
+    id = validateId(id, books, Fore.RED + "Id inválido. Ingresa nuevamente el id del libro a actualizar: " + Fore.RESET)
 
     title:str = input("\nIngrese el título: ")
     genre:str = input("Ingrese el género: ")
@@ -243,7 +249,7 @@ def option09(books: list[dict]) -> list[dict]:
     
     newListBooks: list[dict] =  list(map(mapListBooks , books))
 
-    print(f"\nSe actualizó el libro con el id: {id}\n")
+    print(Fore.GREEN + f"\nSe actualizó el libro con el id: {id}\n")
 
     return newListBooks 
 
@@ -256,10 +262,9 @@ def option10(books: list[dict]):
         register.writeheader()
         register.writerows(books[:])
     
-    print("\nCAMBIOS GUARDADOS\n")
+    print(Fore.BLUE + "\nCAMBIOS GUARDADOS\n")
 
 def option10additional():
-        # saveChanges = 1
         newBooks: list[dict] = []
         booksSelectedForExtract: list[dict] = booksSelected
         
@@ -284,9 +289,28 @@ def option10additional():
 
         option10(newBooks)
 
+#-------------------------------------------- Función de Elegir Otras Opciones --------------------------------------------
+def showOtherOptions(saveChanges: int):
+    while True:
+        proceed: str = input(Fore.MAGENTA + "¿Desea elegir otra opción? S/N: ").upper()
+        if proceed == "S" or proceed == "N":
+            break
+
+    if proceed == "S":
+        print()
+
+    if proceed == "N" and saveChanges == 0:
+        while True:
+            saveChanges: str = input("\nNo has guardado los cambios. ¿Salir sin guardar? S/N: ").upper()
+            if saveChanges == "S":
+                quit()
+            elif saveChanges == "N":
+                option10additional()
+                quit()
+
 #-------------------------------------------- Ejecución Del Programa --------------------------------------------
 def showOptions():
-    print("Elije una de las siguientes opciones:")
+    print(Fore.BLUE+"Elije una de las siguientes opciones:")
     print('''    Opción 1: Leer archivo de disco duro (.txt o csv).
     Opción 2: Listar libros.
     Opción 3: Agregar libro.
@@ -310,33 +334,46 @@ idsAll: list[str] =  [book["id"] for book in booksAll]
 
 while True:
     os.system("cls")
-    print("BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
+    print(Back.CYAN + "BIENVENIDO(A) A NUESTRA BIBLIOTECA\n")
     showOptions()
 
     while True:
-        option: str = input("Ingrese el número de una opción: ")
+        option: str = input(Fore.BLUE+"Ingrese el número de una opción: ")
         
         if option in optionsNumber:
             option: int = int(option)
             break
 
-    saveChanges = 0
+    saveChanges: int = 0
 
+    if (option in range(2, 11, 1) and not booksSelected and not idsSelected):
+        print("\nNo cargaste ningún libro\n")
+
+        backTo = input("Presiona Enter para regresar a las opciones o cualquier tecla para salir... ")
+
+        if backTo == " " or backTo.isalpha() or backTo.isnumeric():
+            quit()
+        else:
+            continue
+
+    if ((option == 4 or option == 9) and not booksSelected and idsSelected):
+        if (option == 4):
+            print("\nNo hay ningún libro para eliminar\n")
+            
+        if (option == 9):
+            print("\nNo hay ningún libro para actualizar\n")
+        
+        showOtherOptions(saveChanges)
+        continue
+        
     if option == 1:
         booksAll = loadBooks()
         booksSelected = option01(booksAll)
         idsSelected = [book["id"] for book in booksSelected]
     if option == 2:
-        if booksSelected == []:
-            print("\nNo cargaste ningún libro\n")
-            backTo = input("Presiona Enter para regresar a las opciones o cualquier tecla para salir... ")
-            if backTo == " " or backTo.isalpha() or backTo.isnumeric():
-                quit()
-            else:
-                continue
         option02(booksSelected)
     if option == 3:
-        booksSelected = option03(idsAll, booksSelected)
+        booksSelected = option03(idsAll, idsSelected, booksSelected)
     if option == 4:
         booksSelected = option04(booksSelected)
     if option == 5:
@@ -355,19 +392,4 @@ while True:
 
     print("----------------------------------------------")
 
-    while True:
-        proceed: str = input("¿Desea elegir otra opción? S/N: ").upper()
-        if proceed == "S" or proceed == "N":
-            break
-
-    if proceed == "S":
-        print()
-        continue
-    if proceed == "N" and saveChanges == 0:
-        while True:
-            saveChanges = input("\nNo has guardado los cambios. ¿Salir sin guardar? S/N: ").upper()
-            if saveChanges == "S":
-                quit()
-            elif saveChanges == "N":
-                option10additional()
-                quit()
+    showOtherOptions(saveChanges)

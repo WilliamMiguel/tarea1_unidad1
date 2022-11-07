@@ -373,7 +373,7 @@ while True:
     if option == 2:
         option02(booksSelected)
     if option == 3:
-        booksSelected = option03(idsAll, idsSelected, booksSelected)
+        booksSelected = option03(idsAll, booksSelected)
     if option == 4:
         booksSelected = option04(booksSelected)
     if option == 5:

@@ -254,18 +254,26 @@ def option09(books: list[dict]) -> list[dict]:
 
     return newListBooks 
 
-loadBooks = option01(totalBooks)
-idsAll: list[str] =  [book["id"] for book in totalBooks]
-addBook = option03(idsAll,loadBooks)
-option02(addBook)
-deleteBook = option04(addBook)
-option02(deleteBook)
-option05or07(1,deleteBook)
-option02(deleteBook)
-option06(deleteBook)
-option08(deleteBook)
-updateBook = option09(deleteBook)
-option02(updateBook)
+# loadBooks = option01(totalBooks)
+# print(totalBooks)
+# idsAll: list[str] =  [book["id"] for book in totalBooks]
+# addBook = option03(idsAll,loadBooks)
+# option02(addBook)
+# deleteBook = option04(addBook)
+# option02(deleteBook)
+# option05or07(1,deleteBook)
+# option02(deleteBook)
+# option06(deleteBook)
+# option08(deleteBook)
+# updateBook = option09(deleteBook)
+# option02(updateBook)
+
+combinedBooks = [{'id': '01', 'title': 'La Historia', 'genre': 'Teología', 'isbn': '875-9-6-845', 'editorial': 'Vida', 'authors': 'Max Lucado'}, {'id': '02', 'title': 'Preparación para pascua', 'genre': 'Teología', 'isbn': '475-9-2-845', 'editorial': 'Harper Collins', 'authors': 'C.S. Lewis'}, {'id': '03', 'title': 'El príncipe Caspian', 'genre': 'Fantasía', 'isbn': '258-6-9-872', 'editorial': 'Cometa', 'authors': 'C.S. Lewis'}]
+combi = [{'id': '04', 'title': '¿Quién creó a Dios?', 'genre': 'Apologética', 'isbn': '978-0-5-989', 'editorial': 'Vida', 'authors': 'Ravi Zacharias; Norman Geisler'}, {'id': '05', 'title': 'Estructuras de datos y algoritmos', 'genre': 'Ingeniería', 'isbn': '978-9-6-860', 'editorial': 'Addison-Wesley', 'authors': 'Alfred V. Aho; John E. Hopcroft; Jeffrey D. Ullman'}, {'id': '06', 'title': 'El principito', 'genre': 'Ficción', 'isbn': '842-3-5-917', 'editorial': 'Salamandra', 'authors': 'Anotine de Saint-Exupery'}]
+otro = [{'id': '04', 'title': '¿Quién creó a Dios?', 'genre': 'Apologética', 'isbn': '978-0-5-989', 'editorial': 'Vida', 'authors': 'Ravi Zacharias; Norman Geisler'}]
+final = combinedBooks+combi+otro
+print(dir(final))
+
 
 # #-------------------------------------------- Opción 10 --------------------------------------------
 # def option10(books: list[dict]):

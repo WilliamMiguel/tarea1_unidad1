@@ -58,6 +58,28 @@ def pokemones_habitat(habitat):
     lista_pokemones=[habitat['name'].capitalize() for habitat in data['pokemon_species']]
     return lista_pokemones
 
+def listar_pokemon(pokemons):
+    url_habilidad="https://pokeapi.co/api/v2/pokemon/"
+    lista_habilidades = []
+    image_url = []
+    for pokemon in pokemons:
+        resp=requests.get(url_habilidad+pokemon.lower())
+        if resp.status_code==200:
+            data =resp.json()
+            habilidades=[habilidad['ability']['name'] for habilidad in data['abilities']]
+            lista_habilidades.append(habilidades)
+            url = data['sprites']['front_default']
+            if url == None:
+                image_url.append("No se encontró información")
+            else: 
+                image_url.append(url)
+            
+        else:
+            lista_habilidades.append("No se encontró información")
+            image_url.append("No se encontró información")
+        
+    return lista_habilidades, image_url
+
 # ------------------------Opción 01 -----------------------------------
 def option01():
     while True:
@@ -75,7 +97,7 @@ def option01():
         pokemones=pokemones_generacion(pregunta1)
 
         print("\nBuscando pokemons...\n")
-        listaPokemons = infoPokemons(pokemones, "abilities", 0, len(pokemones))
+        listaPokemons = listar_pokemon(pokemones)
 
         tuplePokemons = zip(pokemones,listaPokemons[0],listaPokemons[1])
         fieldnames = ["Pokemon","Habilidades","URL Imagen"]
@@ -276,7 +298,7 @@ def option04():
         pokemones=pokemones_habitat(pregunta4)
 
         print("\nBuscando pokemons...\n")
-        listaPokemons = infoPokemons(pokemones, "abilities", 0, len(pokemones))
+        listaPokemons = listar_pokemon(pokemones)
 
         tuplePokemons = zip(pokemones,listaPokemons[0],listaPokemons[1])
         fieldnames = ["Pokemon","Habilidades","URL Imagen"]
